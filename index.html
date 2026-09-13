@@ -7,9 +7,10 @@
 <meta name="description" content="Zayed Art is a multidisciplinary digital studio specializing in web development, UI/UX design, mobile applications, and digital marketing solutions.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/main.css">
 <script src="js/index.js" defer></script>
+<script src="js/lang.js"></script>
 
 <!-- Primary Meta Tags -->
 <meta name="title" content="Zayed Art — Multidisciplinary Digital Studio">
@@ -51,12 +52,13 @@
 
     <div class="za-nav-links">
 
-        <a href="#home" class="za-nav-link">Home</a>
-        <a href="#about" class="za-nav-link">About</a>
-        <a href="#focus" class="za-nav-link">Focus Areas</a>
-        <a href="#approach" class="za-nav-link">Approach</a>
-        <a href="#contact" class="za-nav-link">Contact</a>
-        <a href="portfolio.html" class="za-nav-cta"> Portfolio
+        <a href="#home" class="za-nav-link" data-i18n="home">Home</a>
+        <a href="#about" class="za-nav-link" data-i18n="about">About</a>
+        <a href="#focus" class="za-nav-link" data-i18n="focus">Focus Areas</a>
+        <a href="#approach" class="za-nav-link" data-i18n="approach">Approach</a>
+        <a href="#contact" class="za-nav-link" data-i18n="contact">Contact</a>
+        <a href="photography.html" class="za-nav-link">Photography</a>
+        <a href="portfolio.html" class="za-nav-cta" data-i18n="portfolio"> Portfolio
         </a>
 
     </div>
@@ -110,12 +112,13 @@
 
 <div class="za-mobile-menu" id="mobileMenu">
 
-    <a href="#home" class="za-nav-link">Home</a>
-    <a href="#about" class="za-nav-link">About</a>
-    <a href="#focus" class="za-nav-link">Focus Areas</a>
-    <a href="#approach" class="za-nav-link">Approach</a>
-    <a href="#contact" class="za-nav-link">Contact</a>
-    <a href="portfolio.html" class="za-nav-cta">
+    <a href="#home" class="za-nav-link" data-i18n="home">Home</a>
+    <a href="#about" class="za-nav-link" data-i18n="about">About</a>
+    <a href="#focus" class="za-nav-link" data-i18n="focus">Focus Areas</a>
+    <a href="#approach" class="za-nav-link" data-i18n="approach">Approach</a>
+    <a href="#contact" class="za-nav-link" data-i18n="contact">Contact</a>
+    <a href="photography.html" class="za-nav-link">Photography</a>
+    <a href="portfolio.html" class="za-nav-cta" data-i18n="portfolio">
         Portfolio
     </a>
 </div>
@@ -130,7 +133,7 @@
 
     <div class="za-hero-content">
 
-        <div class="za-hero-eyebrow">
+        <div class="za-hero-eyebrow" data-i18n="heroSubtitle">
             Multidisciplinary Digital Studio
         </div>
 
@@ -142,11 +145,16 @@
 
         <div class="za-hero-actions">
 
-            <a href="#contact" class="za-btn-outline">
+            <a href="#contact" class="za-btn-outline" data-i18n="ctaBtn">
                 Start a Project
             </a>
 
         </div>
+        <div>
+                            <button onclick="setLanguage(document.documentElement.lang === 'ar' ? 'en' : 'ar')" class="za-lang-btn">
+                                EN / عربي
+                            </button>
+                        </div>
 
     </div>
 
@@ -154,7 +162,7 @@
 
         <div class="za-scroll-line"></div>
 
-        Scroll
+        <span data-i18n="scroll">Scroll</span>
 
     </div>
 
@@ -168,38 +176,38 @@
 
         <div class="za-reveal">
 
-            <p class="za-label">
+            <p class="za-label" data-i18n="about">
                 About
             </p>
 
-            <h2 class="za-heading">
+            <h2 class="za-heading" data-i18n="aboutHeading">
                 Building Digital<br>
                 Experiences
             </h2>
 
-            <p class="za-body">
+            <p class="za-body" data-i18n="aboutBody1">
                 Zayed Art is a multidisciplinary digital studio specializing in web development, UI/UX design, mobile applications, and digital marketing solutions.
             </p>
 
-            <p class="za-body" style="margin-top:1rem;">
+            <p class="za-body" style="margin-top:1rem;" data-i18n="aboutBody2">
                 We combine creativity with technical expertise to build digital products that drive real business results.
             </p>
 
             <div class="za-tech-pills">
 
-                <span class="za-pill">
+                <span class="za-pill" data-i18n="techPill1">
                     WordPress · React · Python
                 </span>
 
-                <span class="za-pill">
+                <span class="za-pill" data-i18n="techPill2">
                     Kotlin · Jetpack Compose
                 </span>
 
-                <span class="za-pill">
+                <span class="za-pill" data-i18n="techPill3">
                     Adobe Creative Cloud
                 </span>
 
-                <span class="za-pill">
+                <span class="za-pill" data-i18n="techPill4">
                     Meta Ads · SEO · Automation
                 </span>
 
@@ -213,11 +221,11 @@
 
                 <div class="za-domain">
 
-                    <div class="za-domain-num">
+                    <div class="za-domain-num" data-i18n="domainWebNum">
                         WEB
                     </div>
 
-                    <div class="za-domain-label">
+                    <div class="za-domain-label" data-i18n="domainWebLabel">
                         Development & Platforms
                     </div>
 
@@ -225,11 +233,11 @@
 
                 <div class="za-domain">
 
-                    <div class="za-domain-num">
+                    <div class="za-domain-num" data-i18n="domainMobileNum">
                         MOBILE
                     </div>
 
-                    <div class="za-domain-label">
+                    <div class="za-domain-label" data-i18n="domainMobileLabel">
                         Android Applications
                     </div>
 
@@ -237,11 +245,11 @@
 
                 <div class="za-domain">
 
-                    <div class="za-domain-num">
+                    <div class="za-domain-num" data-i18n="domainDesignNum">
                         DESIGN
                     </div>
 
-                    <div class="za-domain-label">
+                    <div class="za-domain-label" data-i18n="domainDesignLabel">
                         UI/UX & Branding
                     </div>
 
@@ -249,11 +257,11 @@
 
                 <div class="za-domain">
 
-                    <div class="za-domain-num">
+                    <div class="za-domain-num" data-i18n="domainGrowthNum">
                         GROWTH
                     </div>
 
-                    <div class="za-domain-label">
+                    <div class="za-domain-label" data-i18n="domainGrowthLabel">
                         Marketing & Automation
                     </div>
 
@@ -263,7 +271,7 @@
 
             <div class="za-status-box">
 
-                <p class="za-status-label">
+                <p class="za-status-label" data-i18n="statusLabel">
                     // Current status
                 </p>
 
@@ -271,13 +279,13 @@
 
                     <span class="za-status-dot"></span>
 
-                    <span class="za-status-text">
+                    <span class="za-status-text" data-i18n="statusText">
                         Currently in development phase
                     </span>
 
                 </div>
 
-                <p class="za-status-sub">
+                <p class="za-status-sub" data-i18n="statusSub">
                     We're building our first generation of products and services — launching soon.
                 </p>
 
@@ -297,11 +305,11 @@
 
     <div class="za-section-full-inner">
 
-        <p class="za-label">
+        <p class="za-label" data-i18n="focus">
             Focus Areas
         </p>
 
-        <h2 class="za-heading" style="margin-bottom:0;">
+        <h2 class="za-heading" style="margin-bottom:0;" data-i18n="focusHeading">
             What We Do
         </h2>
 
@@ -309,33 +317,33 @@
 
             <div class="za-service-card za-reveal">
 
-                <h3 class="za-service-title">
+                <h3 class="za-service-title" data-i18n="webDevTitle">
                     Web Development
                 </h3>
 
-                <p class="za-service-subtitle">
+                <p class="za-service-subtitle" data-i18n="webDevSubtitle">
                     Custom Web & WordPress Solutions
                 </p>
 
-                <p class="za-service-desc">
+                <p class="za-service-desc" data-i18n="webDevDesc">
                     Tailored web platforms and WordPress solutions engineered for speed, stability, and high performance.
                 </p>
 
                 <ul class="za-service-features">
 
-                    <li class="za-service-feature">
+                    <li class="za-service-feature" data-i18n="webDevFeature1">
                         Custom WordPress Development
                     </li>
 
-                    <li class="za-service-feature">
+                    <li class="za-service-feature" data-i18n="webDevFeature2">
                         Landing Pages & Sales Funnels
                     </li>
 
-                    <li class="za-service-feature">
+                    <li class="za-service-feature" data-i18n="webDevFeature3">
                         React & Web Application Interfaces
                     </li>
 
-                    <li class="za-service-feature">
+                    <li class="za-service-feature" data-i18n="webDevFeature4">
                         Performance Optimization
                     </li>
 
@@ -345,33 +353,33 @@
 
             <div class="za-service-card za-reveal">
 
-                <h3 class="za-service-title">
+                <h3 class="za-service-title" data-i18n="mobileTitle">
                     Mobile Applications
                 </h3>
 
-                <p class="za-service-subtitle">
+                <p class="za-service-subtitle" data-i18n="mobileSubtitle">
                     Android Apps with Modern Architecture
                 </p>
 
-                <p class="za-service-desc">
+                <p class="za-service-desc" data-i18n="mobileDesc">
                     Native Android applications built with Kotlin and Jetpack Compose, focused on clean architecture and seamless experiences.
                 </p>
 
                 <ul class="za-service-features">
 
-                    <li class="za-service-feature">
+                    <li class="za-service-feature" data-i18n="mobileFeature1">
                         Kotlin & Jetpack Compose
                     </li>
 
-                    <li class="za-service-feature">
+                    <li class="za-service-feature" data-i18n="mobileFeature2">
                         State Management
                     </li>
 
-                    <li class="za-service-feature">
+                    <li class="za-service-feature" data-i18n="mobileFeature3">
                         Material UI Layouts
                     </li>
 
-                    <li class="za-service-feature">
+                    <li class="za-service-feature" data-i18n="mobileFeature4">
                         App Publishing Preparation
                     </li>
 
@@ -381,33 +389,33 @@
 
             <div class="za-service-card za-reveal">
 
-                <h3 class="za-service-title">
+                <h3 class="za-service-title" data-i18n="designTitle">
                     Design & Branding
                 </h3>
 
-                <p class="za-service-subtitle">
+                <p class="za-service-subtitle" data-i18n="designSubtitle">
                     Interface Design & Brand Identity
                 </p>
 
-                <p class="za-service-desc">
+                <p class="za-service-desc" data-i18n="designDesc">
                     User-centered visuals that balance aesthetics with functionality, from brand identities to seamless app and web layouts.
                 </p>
 
                 <ul class="za-service-features">
 
-                    <li class="za-service-feature">
+                    <li class="za-service-feature" data-i18n="designFeature1">
                         Brand Identity & Logo Design
                     </li>
 
-                    <li class="za-service-feature">
+                    <li class="za-service-feature" data-i18n="designFeature2">
                         Mobile & Web UI Design
                     </li>
 
-                    <li class="za-service-feature">
+                    <li class="za-service-feature" data-i18n="designFeature3">
                         Figma Prototyping
                     </li>
 
-                    <li class="za-service-feature">
+                    <li class="za-service-feature" data-i18n="designFeature4">
                         Premium Visual Assets
                     </li>
 
@@ -417,33 +425,33 @@
 
             <div class="za-service-card za-reveal">
 
-                <h3 class="za-service-title">
+                <h3 class="za-service-title" data-i18n="marketingTitle">
                     Digital Marketing
                 </h3>
 
-                <p class="za-service-subtitle">
+                <p class="za-service-subtitle" data-i18n="marketingSubtitle">
                     Performance Marketing & Automation
                 </p>
 
-                <p class="za-service-desc">
+                <p class="za-service-desc" data-i18n="marketingDesc">
                     Data-driven strategies that put brands in front of high-value audiences and streamline communication through automation.
                 </p>
 
                 <ul class="za-service-features">
 
-                    <li class="za-service-feature">
+                    <li class="za-service-feature" data-i18n="marketingFeature1">
                         Meta & Google Ads
                     </li>
 
-                    <li class="za-service-feature">
+                    <li class="za-service-feature" data-i18n="marketingFeature2">
                         High-Value Lead Generation
                     </li>
 
-                    <li class="za-service-feature">
+                    <li class="za-service-feature" data-i18n="marketingFeature3">
                         Marketing & WhatsApp Automation
                     </li>
 
-                    <li class="za-service-feature">
+                    <li class="za-service-feature" data-i18n="marketingFeature4">
                         Local SEO & Visibility
                     </li>
 
@@ -461,11 +469,11 @@
 
 <section class="za-section" id="approach">
 
-    <p class="za-label">
+    <p class="za-label" data-i18n="approach">
         Our Approach
     </p>
 
-    <h2 class="za-heading" style="margin-bottom:0;">
+    <h2 class="za-heading" style="margin-bottom:0;" data-i18n="approachHeading">
         How We Work
     </h2>
 
@@ -477,11 +485,11 @@
                 01
             </span>
 
-            <h3 class="za-approach-title">
+            <h3 class="za-approach-title" data-i18n="approach1Title">
                 Quality First
             </h3>
 
-            <p class="za-approach-desc">
+            <p class="za-approach-desc" data-i18n="approach1Desc">
                 Every pixel, every line of code matters. We maintain the highest standards in everything we create.
             </p>
 
@@ -493,11 +501,11 @@
                 02
             </span>
 
-            <h3 class="za-approach-title">
+            <h3 class="za-approach-title" data-i18n="approach2Title">
                 AI-Powered Workflows
             </h3>
 
-            <p class="za-approach-desc">
+            <p class="za-approach-desc" data-i18n="approach2Desc">
                 Integrating advanced AI tools and automation to deliver faster, smarter, and more efficient results.
             </p>
 
@@ -509,11 +517,11 @@
                 03
             </span>
 
-            <h3 class="za-approach-title">
+            <h3 class="za-approach-title" data-i18n="approach3Title">
                 Performance-Driven
             </h3>
 
-            <p class="za-approach-desc">
+            <p class="za-approach-desc" data-i18n="approach3Desc">
                 Built to convert, designed to scale. Every decision is backed by data and focused on results.
             </p>
 
@@ -535,11 +543,11 @@
 
             <div class="za-reveal">
 
-                <p class="za-label">
+                <p class="za-label" data-i18n="contact">
                     Contact
                 </p>
 
-                <h2 class="za-heading">
+                <h2 class="za-heading" data-i18n="contactHeading">
                     Let's Build<br>
                     Something Great
                 </h2>
@@ -579,7 +587,7 @@
 
                     <div>
 
-                        <div class="za-contact-item-label">
+                        <div class="za-contact-item-label" data-i18n="emailLabel">
                             Email
                         </div>
 
@@ -616,7 +624,7 @@
 
                     <div>
 
-                        <div class="za-contact-item-label">
+                        <div class="za-contact-item-label" data-i18n="phoneLabel">
                             Phone
                         </div>
 
@@ -626,6 +634,7 @@
                         >
                             +971 50 973 7113
                         </a>
+                        
 
                     </div>
 
@@ -633,7 +642,7 @@
 
             </div>
         </div>
-        <p class="za-copyright">
+        <p class="za-copyright" data-i18n="copyrightText">
         © 2026 Zayed.Art. All rights reserved.
     </p>
     </div>

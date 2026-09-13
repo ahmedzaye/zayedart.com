@@ -1,4 +1,4 @@
-    // Nav scroll state
+// Nav scroll state
     const nav = document.getElementById('nav');
     const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 30);
     window.addEventListener('scroll', onScroll, { passive: true });

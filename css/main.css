@@ -1,10 +1,4 @@
 /* =========================================================
-   ZAYED ART — MAIN CSS
-   Shared stylesheet for all pages
-   ========================================================= */
-
-
-/* =========================================================
    01. ROOT / DESIGN TOKENS
    ========================================================= */
 
@@ -738,6 +732,41 @@ code {
     color: var(--za-dark);
 
     transform: translateY(-2px);
+}
+
+.za-lang-btn {
+    display: inline-flex;
+    align-items: center;
+
+    margin-top: 1.5rem;
+
+    padding: .55rem 1.25rem;
+
+    background: transparent;
+
+    color: var(--za-dark);
+
+    border: 1px solid rgba(25, 26, 35, .35);
+
+    border-radius: 50px;
+
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .75rem;
+    font-weight: 600;
+
+    letter-spacing: .05em;
+
+    cursor: pointer;
+
+    transition: all .2s;
+}
+
+.za-lang-btn:hover {
+    background: var(--za-accent);
+
+    border-color: var(--za-dark);
+
+    transform: translateY(-1px);
 }
 
 
@@ -2781,6 +2810,35 @@ code {
 }
 
 
+
+
+/* دعم الخطوط العربية ومحاذاة النصوص */
+html[dir="rtl"] {
+  font-family: 'Tajawal', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-align: right;
+}
+
+/* عناصر الخط العريض/الميلاني تستخدم أوزان Tajawal الأثقل بدل الـ Bebas Neue
+   (الشعار ZAYED.ART نفسه يحتفظ بخط Bebas Neue في كل الحالات) */
+html[dir="rtl"] h1:not(.za-hero-title):not(.za-nav-brand),
+html[dir="rtl"] h2:not(.za-nav-brand),
+html[dir="rtl"] h3,
+html[dir="rtl"] .za-heading,
+html[dir="rtl"] .za-card-title,
+html[dir="rtl"] .za-service-title,
+html[dir="rtl"] .za-approach-title,
+html[dir="rtl"] .za-status-text {
+  font-family: 'Tajawal', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: 700;
+}
+
+/* عكس أي هوامش أو محاذاة خاصة عند التبديل للعربية */
+html[dir="rtl"] .za-nav-links {
+  direction: rtl;
+}
+
+
+
 /* =========================================================
    39. RESPONSIVE — TABLET
    ========================================================= */
@@ -2829,6 +2887,8 @@ code {
     }
 
 }
+
+
 
 
 

@@ -27,7 +27,6 @@ const photography = {
     "/assets/photography/cairo/DSCN7285%20copy%202.webp",
     "/assets/photography/cairo/IMG_0006%20copy%202.webp",
     "/assets/photography/cairo/IMG_0052%20copy%202.webp",
-    "/assets/photography/cairo/IMG_0058%20copy.jpg",
     "/assets/photography/cairo/IMG_0058%20copy.webp",
     "/assets/photography/cairo/IMG_0074%20copy%202.webp",
     "/assets/photography/cairo/IMG_0076.webp",

@@ -27,7 +27,7 @@
     --za-radius: 8px;
     --za-radius-small: 6px;
 
-    --za-max-width: 1150px;
+    --za-max-width: 1250px;
 }
 
 
@@ -210,7 +210,7 @@ code {
     display: flex;
     align-items: center;
 
-    gap: 1.75rem;
+    gap: .75rem;
 }
 
 .za-nav-link {
@@ -470,6 +470,8 @@ code {
 
         opacity: 0;
         animation: fadeUp .7s .35s forwards;
+
+        margin-bottom: 1.5rem;
     }
 
     .za-hero-title .accent {
@@ -539,6 +541,8 @@ code {
 
         opacity: 0;
         animation: fadeUp .7s 1s forwards;
+
+        margin-bottom: 1rem;
     }
 
     .za-scroll-line {
@@ -681,6 +685,7 @@ code {
     gap: .5rem;
 
     padding: .8rem 1.75rem;
+    margin: .1rem .1rem;
 
     border-radius: 4px;
 
@@ -2844,7 +2849,7 @@ html[dir="rtl"] .za-nav-links {
    ========================================================= */
 
 @media (max-width: 900px) {
-
+/*
     .za-nav-links {
         display: none;
     }
@@ -2852,7 +2857,7 @@ html[dir="rtl"] .za-nav-links {
     .za-menu-btn {
         display: flex !important;
     }
-
+*/
     .za-about-grid {
         grid-template-columns: 1fr;
 
@@ -2897,6 +2902,34 @@ html[dir="rtl"] .za-nav-links {
    ========================================================= */
 
 @media (max-width: 600px) {
+
+
+.za-domain-num {
+
+    font-size: 1.3rem;
+
+}
+
+.za-domain-label {
+    margin-top: .1rem;
+
+    color: var(--za-text-muted);
+
+    font-size: .75rem;
+
+    letter-spacing: .05em;
+}    
+
+.za-btn-outline {
+    gap: .5rem;
+    padding: .7rem 1rem;
+    margin: .1rem .1rem;
+    border-radius: 4px;
+    font-size: .7rem;
+    font-weight: 600;
+    letter-spacing: .05em;
+}
+
 
     /* ---------- إصلاح الـ Hero بتاع البروفايل ---------- */
 .za-hero,
@@ -3094,7 +3127,7 @@ html[dir="rtl"] .za-nav-links {
     }
 
     .za-hero-title {
-        font-size: 36px;
+        font-size: 66px;
     }
 
     .za-hero-subtitle {
@@ -3281,18 +3314,5 @@ html[dir="rtl"] .za-nav-links {
     }
 
 
-    /* ---------- Domain Grid ---------- */
 
-    .za-domain-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .za-grid-2,
-    .za-grid-3,
-    .za-grid-4 {
-    grid-template-columns:
-        repeat(auto-fit, minmax(200px, 1fr));
-            gap: 0.5rem;
-
-    }
 }

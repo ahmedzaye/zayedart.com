@@ -346,7 +346,7 @@ const translations = {
     approach: "أسلوب العمل",
     contact: "تواصل",
     portfolio: "معرض الأعمال",
-    photography: "فوتوغرافي",
+    photography: "معرض الصور",
 
     // القسم الرئيسي (لا تتم ترجمة شعار "ZAYED.ART" أبداً)
     heroSubtitle: "استوديو رقمي متعدد التخصصات",

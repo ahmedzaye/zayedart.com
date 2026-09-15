@@ -228,7 +228,7 @@ const translations = {
     pfDomain12En: "3D Modeling - Blender",
     pfDomain12Title: "3D Design & Modeling",
     pfDomainsHeading: "Complete 12 Domains Overview",
-    pfDomainsLabel: "08 — Domains Overview",
+    pfDomainsLabel: "07 — Domains Overview",
     pfDomainsSubtitle: "Comprehensive overview of all specialized domains where I have direct practical experience",
     pfEquip1: "Godox Lighting System",
     pfEquip2: "Speedlite Flashes",
@@ -248,14 +248,14 @@ const translations = {
     pfJourneyTitle: "Professional Journey",
     pfNameserversHeading: "Nameservers Transfer on GoDaddy",
     pfObjectiveLabel: "Objective:",
-    pfOverviewNav: "08",
+    pfOverviewNav: "07",
     pfPhotoHeading: "Photography Experience",
-    pfPhotoLabel: "07 — Photography",
+    pfPhotoLabel: "06 — Photography",
     pfPhotoStat1: "Years of Professional Experience",
     pfPhotoStat2: "Photo Sessions Executed",
     pfPhotoStat3: "Certified Professional Certificate",
     pfPhotoSubtitle: "Documented professional record in artistic and commercial photography spanning years",
-    pfPhotographyNav: "07",
+    pfPhotographyNav: "06",
     pfPortfolioAlert: "Generated and qualified direct real estate opportunities contributing to a property portfolio exceeding AED 8.1M in market value.",
     pfPreparedAppEnv: "Prepared the application environment.",
     pfPromptEng: "Prompt Engineering",
@@ -333,7 +333,8 @@ const translations = {
     pgFilterMatrouh: "Matrouh",
     pgFilterUAE: "UAE",
     pgLoading: "Loading photographs...",
-    pgFooter: "© 2026 Zayed.Art — Photography Archive"
+    pgFooter: "© 2026 Zayed.Art — Photography Archive",
+    galleryNotice: "Showing curated shots from an archive of +4,000+ photos. More are being uploaded continuously."
   },
 
   ar: {
@@ -564,7 +565,7 @@ const translations = {
     pfDomain12En: "النمذجة ثلاثية الأبعاد - Blender",
     pfDomain12Title: "التصميم والنمذجة ثلاثية الأبعاد",
     pfDomainsHeading: "نظرة عامة شاملة على المجالات الـ12",
-    pfDomainsLabel: "08 — نظرة عامة على المجالات",
+    pfDomainsLabel: "07 — نظرة عامة على المجالات",
     pfDomainsSubtitle: "نظرة شاملة على جميع المجالات المتخصصة التي أمتلك فيها خبرة عملية مباشرة",
     pfEquip1: "نظام إضاءة Godox",
     pfEquip2: "فلاشات Speedlite",
@@ -584,14 +585,14 @@ const translations = {
     pfJourneyTitle: "المسيرة المهنية",
     pfNameserversHeading: "نقل خوادم الأسماء (Nameservers) على GoDaddy",
     pfObjectiveLabel: "الهدف:",
-    pfOverviewNav: "08",
+    pfOverviewNav: "07",
     pfPhotoHeading: "خبرة التصوير الفوتوغرافي",
-    pfPhotoLabel: "07 — التصوير",
+    pfPhotoLabel: "06 — التصوير",
     pfPhotoStat1: "سنوات من الخبرة المهنية",
     pfPhotoStat2: "جلسة تصوير تم تنفيذها",
     pfPhotoStat3: "شهادة احترافية معتمدة",
     pfPhotoSubtitle: "سجل مهني موثق في التصوير الفني والتجاري عبر سنوات",
-    pfPhotographyNav: "07",
+    pfPhotographyNav: "06",
     pfPortfolioAlert: "تم توليد وتأهيل فرص عقارية مباشرة ساهمت في محفظة عقارية تتجاوز قيمتها السوقية 8.1 مليون درهم إماراتي.",
     pfPreparedAppEnv: "تجهيز بيئة التطبيق.",
     pfPromptEng: "هندسة الأوامر (Prompt Engineering)",
@@ -669,7 +670,9 @@ const translations = {
     pgFilterMatrouh: "مطروح",
     pgFilterUAE: "الإمارات",
     pgLoading: "جاري تحميل الصور...",
-    pgFooter: "© 2026 Zayed.Art — أرشيف التصوير الفوتوغرافي"
+    pgFooter: "© 2026 Zayed.Art — أرشيف التصوير الفوتوغرافي",
+    galleryNotice: "يتم عرض صور مختارة من أصل 4,000+ صورة. العمل جارٍ على رفع بقية الأرشيف تباعاً."
+
   }
 };
 

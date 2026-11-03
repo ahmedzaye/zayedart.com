@@ -2,7 +2,7 @@
 const snakeTranslations = {
  en: {
  snSkip:"Skip to content", snSwitchLanguage:"Switch to Arabic", snOpenMenu:"Open navigation", snCloseMenu:"Close navigation",
- snNavModes:"Game modes",snNavFeatures:"Features",snNavGallery:"Screenshots",snNavPlayGames:"Play Games",snNavPrivacy:"Privacy Policy",snVisitStudio:"Zayed Art Website",
+ snNavModes:"Game modes",snNavFeatures:"Features",snNavGallery:"Screenshots",snNavPlayGames:"Play Games",snNavPrivacy:"Privacy Policy",snNavTerms:"Terms of Service",snVisitStudio:"Zayed Art Website",
  snHeroEyebrow:"ANDROID ARCADE / ZAYED ART",snTagline:"The Classic Snake Game, Reimagined.",snActionline:"Slither. Collect. Customize. Beat your best.",
  snHeroIntro:"Za Snake is a modern take on the classic Snake game, designed for Android and developed by Ahmed Zayed — Zayed Art.",
  snHeroDesc:"Enjoy smooth gameplay, colorful visuals, multiple game modes, rewarding challenges, and a wide range of customization options.",
@@ -42,7 +42,7 @@ const snakeTranslations = {
  },
  ar: {
  snSkip:"تخطي إلى المحتوى",snSwitchLanguage:"Switch to English",snOpenMenu:"فتح القائمة",snCloseMenu:"إغلاق القائمة",
- snNavModes:"أوضاع اللعب",snNavFeatures:"المميزات",snNavGallery:"صور اللعبة",snNavPlayGames:"Play Games",snNavPrivacy:"سياسة الخصوصية",snVisitStudio:"موقع Zayed Art",
+ snNavModes:"أوضاع اللعب",snNavFeatures:"المميزات",snNavGallery:"صور اللعبة",snNavPlayGames:"Play Games",snNavPrivacy:"سياسة الخصوصية",snNavTerms:"شروط الاستخدام",snVisitStudio:"موقع Zayed Art",
  snHeroEyebrow:"لعبة أندرويد / ZAYED ART",snTagline:"لعبة الثعبان الكلاسيكية… بتجربة جديدة!",snActionline:"تحرك. اجمع التفاح. خصّص ثعبانك. وحطّم رقمك القياسي!",
  snHeroIntro:"Za Snake هي لعبة ثعبان عصرية لأجهزة أندرويد، من تطوير أحمد زايد — Zayed Art.",
  snHeroDesc:"استمتع بتجربة لعب سلسة، وتصميمات ملونة، وأوضاع لعب متنوعة، وتحديات ومكافآت يومية، وخيارات واسعة لتخصيص شكل الثعبان.",

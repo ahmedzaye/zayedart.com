@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Za Snake — Android Snake Game | Zayed Art</title>
+  <meta name="description" content="Explore Za Snake, a modern Android snake game with three game modes, daily rewards, achievements, customization, and local progress saving.">
+  <meta name="author" content="Ahmed Zayed — Zayed Art">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#191A23">
+  <link rel="canonical" href="https://zayedart.com/zasnake/">
+  <link rel="icon" type="image/svg+xml" href="../assets/azlogow.svg">
+  <link rel="apple-touch-icon" href="../assets/ZaSnake/ZaSnakeIcon.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/zasnake.css">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Zayed Art">
+  <meta property="og:url" content="https://zayedart.com/zasnake/">
+  <meta property="og:title" content="Za Snake — The Classic Snake Game, Reimagined.">
+  <meta property="og:description" content="Explore Za Snake, the Android snake game by Zayed Art. Enjoy three game modes, colorful customization, daily challenges, and achievements.">
+  <meta property="og:image" content="https://zayedart.com/assets/ZaSnake/ZaSnakeCover.png">
+  <meta property="og:image:alt" content="Official Za Snake game cover">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="ar_AE">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Za Snake — The Classic Snake Game, Reimagined.">
+  <meta name="twitter:description" content="Three Snake game modes, colorful customization, daily challenges, and achievements.">
+  <meta name="twitter:image" content="https://zayedart.com/assets/ZaSnake/ZaSnakeCover.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Za Snake",
+    "url": "https://zayedart.com/zasnake/",
+    "description": "A modern Snake game for Android with Classic, Time Attack, and Zen modes, customization, daily challenges, and local progress saving.",
+    "image": "https://zayedart.com/assets/ZaSnake/ZaSnakeCover.png",
+    "operatingSystem": "Android",
+    "inLanguage": ["en", "ar"],
+    "genre": "Arcade",
+    "author": {"@type": "Person", "name": "Ahmed Zayed"},
+    "publisher": {"@type": "Organization", "name": "Zayed Art", "url": "https://zayedart.com/"}
+  }
+  </script>
+  <script src="../js/lang.js" defer></script>
+  <script src="../js/zasnake.js" defer></script>
+</head>
+<body class="snake-page">
+  <a class="snake-skip" href="#main" data-i18n="snSkip">Skip to content</a>
+  <nav class="za-nav" id="nav" aria-label="Primary navigation">
+    <a class="za-nav-brand" href="../index.html" aria-label="Zayed Art — Home">ZAYED<span>.</span>ART</a>
+    <div class="za-nav-links">
+      <a class="za-nav-link" href="#modes" data-i18n="snNavModes">Game modes</a>
+      <a class="za-nav-link" href="#features" data-i18n="snNavFeatures">Features</a>
+      <a class="za-nav-link" href="#gallery" data-i18n="snNavGallery">Screenshots</a>
+      <a class="za-nav-link" href="#play-games" data-i18n="snNavPlayGames">Play Games</a>
+      <a class="za-nav-link" href="https://zayedart.com/zasnakeprivacy" data-i18n="snNavPrivacy">Privacy</a>
+    </div>
+    <div class="snake-nav-actions">
+      <button type="button" id="snakeLangBtn" class="snake-lang-button" aria-label="Switch language" data-i18n-aria="snSwitchLanguage">عربي</button>
+      <button type="button" id="menuBtn" class="za-menu-btn" aria-label="Open navigation" aria-expanded="false" aria-controls="mobileMenu" data-i18n-aria="snOpenMenu">
+        <svg width="23" height="23" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </nav>
+  <div class="za-mobile-menu" id="mobileMenu">
+    <a class="za-nav-link" href="#modes" data-i18n="snNavModes">Game modes</a>
+    <a class="za-nav-link" href="#features" data-i18n="snNavFeatures">Features</a>
+    <a class="za-nav-link" href="#gallery" data-i18n="snNavGallery">Screenshots</a>
+    <a class="za-nav-link" href="#play-games" data-i18n="snNavPlayGames">Play Games</a>
+    <a class="za-nav-link" href="https://zayedart.com/zasnakeprivacy" data-i18n="snNavPrivacy">Privacy</a>
+    <a class="za-nav-link" href="../index.html" data-i18n="snVisitStudio">Zayed Art Website</a>
+  </div>
+
+  <main id="main">
+    <section class="snake-hero" id="home" aria-labelledby="snakeHeading">
+      <div class="snake-hero-grid" aria-hidden="true"></div>
+      <div class="snake-container snake-hero-inner">
+        <div class="snake-hero-copy">
+          <p class="snake-eyebrow"><span class="snake-eyebrow-dot"></span><span data-i18n="snHeroEyebrow">ANDROID ARCADE / ZAYED ART</span></p>
+          <h1 class="snake-title" id="snakeHeading">Za <span>Snake</span><span class="snake-title-dot">.</span></h1>
+          <p class="snake-tagline" data-i18n="snTagline">The Classic Snake Game, Reimagined.</p>
+          <p class="snake-actionline" data-i18n="snActionline">Slither. Collect. Customize. Beat your best.</p>
+          <p class="snake-lead" data-i18n="snHeroIntro">Za Snake is a modern take on the classic Snake game, designed for Android and developed by Ahmed Zayed — Zayed Art.</p>
+          <p class="snake-lead snake-lead-secondary" data-i18n="snHeroDesc">Enjoy smooth gameplay, colorful visuals, multiple game modes, rewarding challenges, and a wide range of customization options.</p>
+          <p class="snake-lead snake-lead-secondary" data-i18n="snHeroTail">Whether you're chasing a new high score or enjoying a relaxing round, Za Snake brings a fresh experience to a timeless arcade favorite.</p>
+          <div class="snake-hero-actions">
+            <a class="snake-button snake-button-accent" href="#modes"><span data-i18n="snExploreModes">Explore Game Modes</span><span aria-hidden="true">↗</span></a>
+            <a class="snake-button snake-button-outline" href="#gallery" data-i18n="snViewScreenshots">View Screenshots</a>
+          </div>
+          <div class="snake-hero-footer">
+            <img src="../assets/ZaSnake/ZaSnakeIcon.jpg" alt="Za Snake official game icon" data-i18n-alt="snIconAlt" width="62" height="62" decoding="async">
+            <span><strong>Za Snake</strong><small data-i18n="snHeroPlatform">Android game by Ahmed Zayed — Zayed Art</small></span>
+          </div>
+        </div>
+        <div class="snake-hero-visual">
+          <div class="snake-cover-frame">
+            <span class="snake-cover-stamp" data-i18n="snOfficialArt">OFFICIAL GAME ART</span>
+            <img class="snake-cover" src="../assets/ZaSnake/ZaSnakeCover.png" alt="Official Za Snake game cover artwork" data-i18n-alt="snCoverAlt" loading="eager" decoding="async">
+          </div>
+          <span class="snake-visual-caption" data-i18n="snActualArt">Original artwork from the game project</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="za-section snake-section" id="modes" aria-labelledby="modesHeading">
+      <div class="snake-container">
+        <div class="snake-section-heading">
+          <p class="za-label" data-i18n="snModesLabel">01 / GAME MODES</p>
+          <h2 class="za-heading" id="modesHeading" data-i18n="snModesHeading">Three Ways to Play</h2>
+          <p class="snake-section-intro" data-i18n="snModesIntro">Choose your challenge. Every run is a new chance to beat your best.</p>
+        </div>
+        <div class="snake-mode-grid">
+          <article class="za-card snake-mode-card">
+            <span class="snake-mode-number">01</span>
+            <div class="snake-mode-symbol" aria-hidden="true">↗</div>
+            <h3 data-i18n="snModeClassicTitle">Classic Mode</h3>
+            <p data-i18n="snModeClassicDesc">The original Snake challenge. Collect apples, grow longer, avoid collisions, and push your score higher with every round.</p>
+          </article>
+          <article class="za-card snake-mode-card snake-mode-card-featured">
+            <span class="snake-mode-number">02</span>
+            <div class="snake-mode-symbol" aria-hidden="true">60<span>s</span></div>
+            <h3 data-i18n="snModeTimeTitle">Time Attack Mode</h3>
+            <p data-i18n="snModeTimeDesc">Race against the clock! Start with 60 seconds and earn two additional seconds for every regular apple collected. Stay focused and beat your best score.</p>
+          </article>
+          <article class="za-card snake-mode-card">
+            <span class="snake-mode-number">03</span>
+            <div class="snake-mode-symbol" aria-hidden="true">∞</div>
+            <h3 data-i18n="snModeZenTitle">Zen Mode</h3>
+            <p data-i18n="snModeZenDesc">Relax and enjoy the game at your own pace. Explore a collision-friendly experience without losing your round from collisions.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="snake-gallery-section" id="gallery" aria-labelledby="galleryHeading">
+      <div class="snake-container">
+        <div class="snake-section-heading snake-section-heading-light">
+          <p class="za-label" data-i18n="snGalleryLabel">02 / FROM THE GAME</p>
+          <h2 class="za-heading" id="galleryHeading" data-i18n="snGalleryHeading">See Za Snake in Action</h2>
+          <p class="snake-section-intro" data-i18n="snGalleryIntro">Real screenshots captured from the Za Snake project — no mockups.</p>
+        </div>
+        <div class="snake-screenshots" aria-label="Za Snake game screenshots" data-i18n-aria="snGalleryAria">
+          <figure><img src="../assets/ZaSnake/1%20%281%29.jpg" alt="Actual Za Snake gameplay screenshot 1" data-i18n-alt="snShot1Alt" loading="lazy" decoding="async"><figcaption data-i18n="snShotCaption">Actual game screenshot</figcaption></figure>
+          <figure><img src="../assets/ZaSnake/1%20%282%29.jpg" alt="Actual Za Snake gameplay screenshot 2" data-i18n-alt="snShot2Alt" loading="lazy" decoding="async"><figcaption data-i18n="snShotCaption">Actual game screenshot</figcaption></figure>
+          <figure><img src="../assets/ZaSnake/1%20%283%29.jpg" alt="Actual Za Snake gameplay screenshot 3" data-i18n-alt="snShot3Alt" loading="lazy" decoding="async"><figcaption data-i18n="snShotCaption">Actual game screenshot</figcaption></figure>
+          <figure><img src="../assets/ZaSnake/1%20%284%29.jpg" alt="Actual Za Snake gameplay screenshot 4" data-i18n-alt="snShot4Alt" loading="lazy" decoding="async"><figcaption data-i18n="snShotCaption">Actual game screenshot</figcaption></figure>
+          <figure><img src="../assets/ZaSnake/1%20%2810%29.jpg" alt="Actual Za Snake gameplay screenshot 5" data-i18n-alt="snShot5Alt" loading="lazy" decoding="async"><figcaption data-i18n="snShotCaption">Actual game screenshot</figcaption></figure>
+        </div>
+        <p class="snake-scroll-hint" data-i18n="snSwipeHint">Swipe or scroll horizontally to explore the screenshots.</p>
+      </div>
+    </section>
+
+    <section class="za-section snake-section" id="customize" aria-labelledby="customizeHeading">
+      <div class="snake-container snake-feature-split">
+        <div class="snake-section-heading">
+          <p class="za-label" data-i18n="snCustomizeLabel">03 / PERSONALIZE</p>
+          <h2 class="za-heading" id="customizeHeading" data-i18n="snCustomizeHeading">Make Your Snake Your Own</h2>
+          <p class="snake-section-intro" data-i18n="snCustomizeIntro">Personalize your experience with a variety of unlockable options:</p>
+          <p class="snake-highlight-text" data-i18n="snCustomizeOutro">Earn in-game coins through gameplay, achievements, and daily rewards to unlock new customization options.</p>
+        </div>
+        <ul class="snake-custom-list" aria-label="Customization options">
+          <li><span class="snake-list-index">01</span><span data-i18n="snCustomize1">Colorful snake skins, including designs inspired by Arab countries.</span></li>
+          <li><span class="snake-list-index">02</span><span data-i18n="snCustomize2">Different snake head styles.</span></li>
+          <li><span class="snake-list-index">03</span><span data-i18n="snCustomize3">Unique body shapes and visual effects.</span></li>
+          <li><span class="snake-list-index">04</span><span data-i18n="snCustomize4">Beautiful game themes and backgrounds.</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="za-section-full snake-section snake-features-section" id="features" aria-labelledby="featuresHeading">
+      <div class="snake-container">
+        <div class="snake-section-heading">
+          <p class="za-label" data-i18n="snFeaturesLabel">04 / FEATURES</p>
+          <h2 class="za-heading" id="featuresHeading" data-i18n="snFeaturesHeading">More Than Just a Snake Game</h2>
+        </div>
+        <div class="snake-features-grid">
+          <article class="za-card snake-feature-card"><span class="snake-feature-icon" aria-hidden="true">★</span><h3 data-i18n="snFeatureDailyTitle">Daily Challenges &amp; Rewards</h3><p data-i18n="snFeatureDailyDesc">Complete daily challenges, collect rewards, and earn coins as you play.</p></article>
+          <article class="za-card snake-feature-card"><span class="snake-feature-icon" aria-hidden="true">↗</span><h3 data-i18n="snFeatureStatsTitle">Achievements &amp; Statistics</h3><p data-i18n="snFeatureStatsDesc">Track your best scores, gameplay milestones, and achievements as you improve your skills.</p></article>
+          <article class="za-card snake-feature-card"><span class="snake-feature-icon" aria-hidden="true">≡</span><h3 data-i18n="snFeatureDifficultyTitle">Adjustable Difficulty</h3><p data-i18n="snFeatureDifficultyDesc">Choose between Easy, Medium, and Hard, and customize gameplay settings to suit your preferences.</p></article>
+          <article class="za-card snake-feature-card"><span class="snake-feature-icon" aria-hidden="true">ع / E</span><h3 data-i18n="snFeatureLanguageTitle">Arabic &amp; English Support</h3><p data-i18n="snFeatureLanguageDesc">Enjoy the game in Arabic or English, with flexible controls and support for portrait and landscape orientations.</p></article>
+          <article class="za-card snake-feature-card"><span class="snake-feature-icon" aria-hidden="true">✓</span><h3 data-i18n="snFeatureLocalTitle">Local Game Progress</h3><p data-i18n="snFeatureLocalDesc">Your gameplay progress and preferences are saved locally on your device, allowing you to continue playing without requiring an online account.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="za-section snake-section" id="play-games" aria-labelledby="playGamesHeading">
+      <div class="snake-container snake-info-grid">
+        <div class="snake-info-intro">
+          <p class="za-label" data-i18n="snPlayLabel">05 / OPTIONAL CONNECTIVITY</p>
+          <h2 class="za-heading" id="playGamesHeading" data-i18n="snPlayHeading">Google Play Games Integration</h2>
+          <p class="snake-info-emphasis" data-i18n="snPlayLead">Play your way — online features are optional.</p>
+        </div>
+        <div class="snake-info-copy">
+          <p data-i18n="snPlay1">Za Snake includes optional Google Play Games integration intended to support player authentication, game achievements, and cloud-based progress features.</p>
+          <p data-i18n="snPlay2">When available and enabled, Google Play Games sign-in may access your Google Play Games player identity to connect your gaming profile with supported game features.</p>
+          <p data-i18n="snPlay3">Google Play Games connectivity and cloud synchronization are currently subject to service configuration, device compatibility, network availability, and age-related restrictions. Some features may not be available.</p>
+          <div class="snake-safe-note"><span aria-hidden="true">✓</span><p data-i18n="snPlay4">A Google account is not required to enjoy the core game. Players can continue playing with locally saved progress without signing in.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="snake-privacy-section" id="privacy" aria-labelledby="privacyHeading">
+      <div class="snake-container snake-privacy-inner">
+        <div>
+          <p class="snake-light-label" data-i18n="snPrivacyLabel">06 / PRIVACY FIRST</p>
+          <h2 class="za-heading" id="privacyHeading" data-i18n="snPrivacyHeading">Privacy &amp; Player Safety</h2>
+          <p data-i18n="snPrivacy1">Za Snake is designed for a broad audience, including children aged 6 and older.</p>
+          <p data-i18n="snPrivacy2">The game uses age-appropriate controls to manage access to optional online services. Where permitted, it may display advertisements through Google AdMob, including optional rewarded advertisements.</p>
+          <p data-i18n="snPrivacy3">Gameplay data is stored locally by default. Certain Google services may process information when their features are available and used, as explained in our Privacy Policy.</p>
+          <p data-i18n="snPrivacy4">We are committed to transparency about how information is used and to providing an enjoyable gaming experience.</p>
+          <a class="snake-button snake-button-accent" href="https://zayedart.com/zasnakeprivacy"><span data-i18n="snReadPrivacy">Read Privacy Policy</span><span aria-hidden="true">↗</span></a>
+        </div>
+        <div class="snake-privacy-mark" aria-hidden="true"><span>ZA</span><strong>PRIVACY</strong><small>PLAYER FIRST</small></div>
+      </div>
+    </section>
+
+    <section class="za-section snake-section" id="developer" aria-labelledby="developerHeading">
+      <div class="snake-container snake-bottom-grid">
+        <article class="za-card snake-bottom-card">
+          <p class="za-label" data-i18n="snDeveloperLabel">07 / THE CREATOR</p>
+          <h2 class="za-heading" id="developerHeading" data-i18n="snDeveloperHeading">About the Developer</h2>
+          <p data-i18n="snDeveloper1">Za Snake is created and maintained by Ahmed Zayed, under the Zayed Art brand.</p>
+          <p data-i18n="snDeveloper2">Zayed Art is a digital creative studio focused on design, web development, mobile applications, and meaningful digital experiences.</p>
+          <a class="snake-inline-link" href="https://zayedart.com/" data-i18n="snVisitStudio">Zayed Art Website</a>
+        </article>
+        <article class="za-card snake-bottom-card" id="support" aria-labelledby="supportHeading">
+          <p class="za-label" data-i18n="snSupportLabel">08 / GET IN TOUCH</p>
+          <h2 class="za-heading" id="supportHeading" data-i18n="snSupportHeading">Support &amp; Contact</h2>
+          <p data-i18n="snSupport1">Have a question, feedback, or an issue with Za Snake?</p>
+          <p data-i18n="snSupport2">We'd love to hear from you.</p>
+          <p class="snake-developer-name" data-i18n="snDeveloperName">Developer: Ahmed Zayed — Zayed Art</p>
+          <a class="snake-inline-link" href="mailto:ahmed@zayedart.com">ahmed@zayedart.com</a>
+        </article>
+      </div>
+    </section>
+  </main>
+  <footer class="za-footer snake-footer">
+    <a class="za-nav-brand" href="../index.html">ZAYED<span>.</span>ART</a>
+    <p data-i18n="snFooterDescription">Za Snake is an Android game developed by Zayed Art.</p>
+    <div class="snake-footer-links"><a href="https://zayedart.com/zasnakeprivacy" data-i18n="snNavPrivacy">Privacy Policy</a><a href="https://zayedart.com/" data-i18n="snVisitStudio">Zayed Art Website</a><a href="mailto:ahmed@zayedart.com" data-i18n="snFooterContact">Contact</a></div>
+    <p class="za-copyright" data-i18n="snFooterCopyright">© 2026 Zayed Art. All rights reserved.</p>
+  </footer>
+</body>
+</html>

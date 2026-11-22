@@ -1,0 +1,16 @@
+{
+  "name": "zayedart-site",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test tests/data.test.mjs tests/worker.test.mjs",
+    "validate": "node scripts/validate-photography.mjs",
+    "build": "npm test && node scripts/build-site.mjs"
+  },
+  "devDependencies": {
+    "sharp": "0.34.5"
+  }
+}

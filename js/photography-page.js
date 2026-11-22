@@ -136,14 +136,18 @@ function renderGallery() {
     photoCount.textContent = buildCountText(visible.length);
 
     visible.forEach((photo, index) => {
-        const item = document.createElement('article');
+        const item = document.createElement('button');
+        item.type = 'button';
+        item.setAttribute('aria-label', photoAlt(photo));
         item.className = 'za-photo-item';
         item.dataset.category = photo.category;
 
         const image = document.createElement('img');
-        image.src = photo.src;
+        image.src = photo.thumbnail || photo.src;
+        image.onerror = () => { image.onerror = null; if (image.src !== new URL(photo.src, location.origin).href) image.src = photo.src; };
+        if (photo.width && photo.height) { image.width = photo.width; image.height = photo.height; }
         image.alt = photoAlt(photo);
-        image.loading = 'lazy';
+        image.loading = index < 3 ? 'eager' : 'lazy';
         image.decoding = 'async';
         image.draggable = false;
 
@@ -167,14 +171,19 @@ function renderGallery() {
 
 let currentPhotos = [];
 let currentIndex = 0;
+let previousFocus = null;
 
 function openLightbox(photos, index) {
+    previousFocus = document.activeElement;
     currentPhotos = photos;
     currentIndex = index;
 
     updateLightbox();
 
     lightbox.classList.add('open');
+    lightbox.setAttribute('aria-hidden', 'false');
+    document.querySelector('.za-photo-page').inert = true;
+    lightboxClose.focus();
     document.body.style.overflow = 'hidden';
 }
 
@@ -205,6 +214,9 @@ function updateLightbox() {
 
 function closeLightbox() {
     lightbox.classList.remove('open');
+    lightbox.setAttribute('aria-hidden', 'true');
+    document.querySelector('.za-photo-page').inert = false;
+    previousFocus?.focus();
     document.body.style.overflow = '';
 
     setTimeout(() => {
@@ -237,6 +249,12 @@ lightbox.addEventListener('click', event => {
 document.addEventListener('keydown', event => {
     if (!lightbox.classList.contains('open')) return;
 
+    if (event.key === 'Tab') {
+        const controls = [lightboxClose, lightboxPrev, lightboxNext];
+        const current = controls.indexOf(document.activeElement);
+        event.preventDefault();
+        controls[(current + (event.shiftKey ? -1 : 1) + controls.length) % controls.length].focus();
+    }
     if (event.key === 'Escape') closeLightbox();
     if (event.key === 'ArrowLeft') showPrevious();
     if (event.key === 'ArrowRight') showNext();
@@ -297,6 +315,7 @@ async function init() {
             .sort(byDate);
 
         loaded = true;
+        photoCount.removeAttribute('data-i18n');
 
         renderFilters();
         renderGallery();

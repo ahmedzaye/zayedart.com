@@ -771,3 +771,6 @@
             }
 
         }
+
+button.za-photo-item { padding: 0; border: 0; width: 100%; text-align: inherit; background: none; cursor: pointer; }
+.za-photo-item:focus-visible, .za-photo-filter:focus-visible { outline: 3px solid var(--za-accent); outline-offset: 4px; }

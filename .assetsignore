@@ -4,3 +4,5 @@ node_modules/
 wrangler.jsonc
 admin/
 scripts/
+shared/
+tests/

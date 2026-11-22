@@ -2,6 +2,8 @@
   "$schema": "../node_modules/wrangler/config-schema.json",
   "name": "zayedart-admin",
   "main": "src/index.js",
+  "workers_dev": false,
+  "preview_urls": false,
   "compatibility_date": "2026-09-15",
 
   // Static dashboard (public/) + API (/api/*) in one Worker
@@ -12,7 +14,7 @@
 
   // Needs the zayedart.com zone on Cloudflare
   "routes": [
-    { "pattern": "admin.zayedart.com", "custom_domain": true }
+    { "pattern": "dashcontrol.zayedart.com", "custom_domain": true }
   ],
 
   "vars": {

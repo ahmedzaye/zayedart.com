@@ -20,6 +20,9 @@ function h(tag, props = {}, ...kids) {
 let state = { data: { categories: [], photos: [] }, config: {} };
 let selected = new Set();
 let queue = [];            // pending uploads: { file, url, category, date, titleEn, titleAr, descEn, descAr, error }
+let saving = false;
+let publicationTimer;
+let publicationGeneration = 0;
 let editing = null;        // photo being edited
 
 /* =====================================================
@@ -27,20 +30,49 @@ let editing = null;        // photo being edited
    ===================================================== */
 
 async function api(method, path, body) {
-    const init = { method, headers: {} };
-
-    if (body instanceof FormData) init.body = body;
-    else if (body) {
-        init.body = JSON.stringify(body);
-        init.headers['Content-Type'] = 'application/json';
+    const write = method !== 'GET';
+    if (write && saving) throw new Error('A save is already running. Please wait.');
+    const controls = write ? [...document.querySelectorAll('button, input, select, textarea')] : [];
+    const disabled = controls.map(control => control.disabled);
+    if (write) { saving = true; controls.forEach(control => control.disabled = true); }
+    try {
+        const init = { method, headers: {} };
+        if (body instanceof FormData) init.body = body;
+        else if (body) { init.body = JSON.stringify(body); init.headers['Content-Type'] = 'application/json'; }
+        const res = await fetch(path, init);
+        if (!(res.headers.get('Content-Type') || '').includes('application/json')) throw new Error('Session expired. Reload this page to sign in again.');
+        const payload = await res.json();
+        if (!res.ok) throw new Error(payload.error || 'Request failed (' + res.status + ')');
+        if (write && payload.commitSha) trackPublication(payload.commitSha);
+        return payload;
+    } finally {
+        if (write) { saving = false; controls.forEach((control, i) => control.disabled = disabled[i]); }
     }
+}
 
-    const res = await fetch(path, init);
-    let payload = {};
-    try { payload = await res.json(); } catch { /* non-JSON error page (e.g. Access login) */ }
-
-    if (!res.ok) throw new Error(payload.error || `خطأ ${res.status}`);
-    return payload;
+async function trackPublication(commit) {
+    clearTimeout(publicationTimer);
+    const generation = ++publicationGeneration;
+    try { sessionStorage.setItem('pending-publication', commit); } catch { /* optional */ }
+    let attempts = 0;
+    const check = async () => {
+        if (generation !== publicationGeneration) return;
+        try {
+            const result = await api('GET', '/api/publication?commit=' + encodeURIComponent(commit));
+            if (generation !== publicationGeneration) return;
+            if (result.status === 'published') {
+                $('deployNote').textContent = '\u062a\u0645 \u0627\u0644\u0646\u0634\u0631 \u0639\u0644\u0649 \u0627\u0644\u0645\u0648\u0642\u0639 \u0628\u0646\u062c\u0627\u062d.';
+                $('deployNote').hidden = false;
+                try { sessionStorage.removeItem('pending-publication'); } catch { /* optional */ }
+                return;
+            }
+        } catch { /* keep the saved GitHub state; a check failure is not a save failure */ }
+        if (++attempts < 36) publicationTimer = setTimeout(check, 5000);
+        else {
+            $('deployNote').textContent = '\u062a\u0645 \u0627\u0644\u062d\u0641\u0638 \u0639\u0644\u0649 GitHub\u060c \u0644\u0643\u0646 \u0644\u0645 \u064a\u062a\u0623\u0643\u062f \u0627\u0644\u0646\u0634\u0631 \u0628\u0639\u062f. \u0631\u0627\u062c\u0639 \u062d\u0627\u0644\u0629 Cloudflare.';
+        }
+    };
+    publicationTimer = setTimeout(check, 1500);
 }
 
 async function load() {
@@ -66,7 +98,7 @@ function toast(msg, isErr = false) {
     toastTimer = setTimeout(() => t.classList.remove('show'), isErr ? 6000 : 3500);
 }
 
-const DEPLOY_MSG = 'تم الحفظ على GitHub. التعديل هيظهر في الموقع بعد ما الـ Deploy يخلص (غالبًا خلال دقيقة).';
+const DEPLOY_MSG = '\u062a\u0645 \u0627\u0644\u062d\u0641\u0638 \u0639\u0644\u0649 GitHub. \u062c\u0627\u0631\u064a \u0627\u0644\u062a\u062d\u0642\u0642 \u0645\u0646 \u0646\u0634\u0631 \u0627\u0644\u062a\u0639\u062f\u064a\u0644 \u0639\u0644\u0649 \u0627\u0644\u0645\u0648\u0642\u0639...';
 
 function saved(msg) {
     toast(msg);
@@ -104,7 +136,8 @@ const setBusy = (btns, busy) => btns.forEach((b) => (b.disabled = busy));
    UPLOAD
    ===================================================== */
 
-function addFiles(fileList) {
+async function addFiles(fileList) {
+    if (saving) return;
     const max = state.config.maxFiles || 20;
     const limit = (state.config.maxFileMB || 8) * 1024 * 1024;
 
@@ -122,6 +155,14 @@ function addFiles(fileList) {
         });
     }
 
+    for (const item of queue.filter(item => !item.error && !item.validated)) {
+        try {
+            const image = await createImageBitmap(item.file);
+            if (image.width * image.height > 40_000_000) item.error = 'Image exceeds 40 megapixels';
+            image.close();
+            item.validated = true;
+        } catch { item.error = 'Invalid WebP image'; }
+    }
     renderQueue();
 }
 
@@ -138,6 +179,7 @@ function renderQueue() {
         q.append(h('div', { class: 'qrow' },
             h('img', { src: item.url, alt: '' }),
             h('div', { class: 'f' },
+                h('small', { dir: 'ltr' }, 'GitHub folder: assets/photography/' + item.category + '/'),
                 h('div', { class: 'name' },
                     h('span', {}, `${item.file.name} · ${(item.file.size / 1024).toFixed(0)} KB`),
                     h('button', { type: 'button', title: 'إزالة', onclick: () => { URL.revokeObjectURL(item.url); queue.splice(i, 1); renderQueue(); } }, '×')),
@@ -154,6 +196,8 @@ function renderQueue() {
 }
 
 async function upload() {
+    if (!queue.length || queue.some(i => !i.validated && !i.error)) return toast('Wait for image validation', true);
+    if (queue.reduce((sum, item) => sum + item.file.size, 0) > (state.config.maxTotalMB || 40) * 1024 * 1024) return toast('Upload exceeds the total size limit', true);
     if (queue.some((i) => i.error)) return toast('امسح الصور اللي فيها أخطاء الأول', true);
     if (queue.some((i) => !i.category)) return toast('اختار قسم لكل صورة', true);
 
@@ -264,8 +308,8 @@ function renderLibrary() {
         const title = p.title.ar || p.title.en;
         const thumb = h('div', { class: 'thumb' });
         thumb.append(h('img', {
-            src: origin + p.src, alt: '', loading: 'lazy',
-            onerror: (e) => { e.target.replaceWith(document.createTextNode('قيد النشر…')); }
+            src: origin + p.src.replace('/assets/photography/', '/assets/photography-thumbnails/'), alt: '', loading: 'lazy',
+            onerror: (e) => { if (!e.target.dataset.fallback) { e.target.dataset.fallback = '1'; e.target.src = origin + p.src; return; } e.target.replaceWith(document.createTextNode('قيد النشر…')); }
         }));
 
         const card = h('div', { class: 'pcard' + (selected.has(p.src) ? ' sel' : ''), onclick: () => openEdit(p) },
@@ -316,7 +360,7 @@ function openEdit(p) {
     $('eTitleAr').value = p.title.ar;
     $('eDescEn').value = p.description.en;
     $('eDescAr').value = p.description.ar;
-    $('ePath').textContent = fileName(p.src);
+    $('ePath').textContent = decodeURIComponent(p.src);
     $('editImg').src = (state.config.siteOrigin || '') + p.src;
     $('eStatus').textContent = '';
     $('editDialog').showModal();
@@ -415,4 +459,4 @@ $('eSave').addEventListener('click', saveEdit);
 $('eCancel').addEventListener('click', () => $('editDialog').close());
 $('eDelete').addEventListener('click', () => deleteSrcs([editing.src]));
 
-load().catch((err) => toast(err.message, true));
+load().then(() => { try { const pending = sessionStorage.getItem('pending-publication'); if (pending) trackPublication(pending); } catch { /* optional */ } }).catch((err) => toast(err.message, true));

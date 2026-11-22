@@ -99,13 +99,13 @@ const menuBtn = document.getElementById('menuBtn');
 
 const mobileMenu = document.getElementById('mobileMenu');
 
-menuBtn.addEventListener('click', () =>
-    mobileMenu.classList.toggle('open')
-);
+const closeMenu = () => { mobileMenu.classList.remove('open'); menuBtn.setAttribute('aria-expanded', 'false'); };
+menuBtn.addEventListener('click', () => { const open = mobileMenu.classList.toggle('open'); menuBtn.setAttribute('aria-expanded', String(open)); });
+document.addEventListener('keydown', event => { if (event.key === 'Escape') closeMenu(); });
 
 mobileMenu.querySelectorAll('a').forEach(a =>
     a.addEventListener('click', () =>
-        mobileMenu.classList.remove('open')
+        closeMenu()
     )
 );
 

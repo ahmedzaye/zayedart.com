@@ -1,7 +1,9 @@
+import { PHOTO_DIR, SLUG, RESERVED_CATEGORIES, isDate, photoPath, validateData, webpInfo } from '../../shared/photography.mjs';
+
 /**
  * zayedart-admin — API for the photography dashboard.
  *
- * Runs behind Cloudflare Access (admin.zayedart.com). It never trusts the
+ * Runs behind Cloudflare Access (dashcontrol.zayedart.com). It never trusts the
  * network alone: every /api/* call re-verifies the Access JWT.
  *
  * All writes go to GitHub as ONE commit per request (images + data/photography.json),
@@ -9,7 +11,6 @@
  */
 
 const DATA_PATH = 'data/photography.json';
-const PHOTO_DIR = 'assets/photography';
 
 const MAX_FILES = 20;
 const MAX_FILE_BYTES = 8 * 1024 * 1024;      // per image
@@ -55,13 +56,19 @@ async function getKeys(env, force = false) {
 
 async function verifyAccess(request, env) {
     // Local `wrangler dev` only (set in .dev.vars, never in production).
-    if (env.DEV_BYPASS_AUTH === '1') return { email: 'dev@localhost' };
+    if (env.DEV_BYPASS_AUTH === '1' && env.ENVIRONMENT === 'development' &&
+        ['localhost', '127.0.0.1', '[::1]'].includes(new URL(request.url).hostname)) return { email: 'dev@localhost' };
+    if (!env.ACCESS_AUD || !env.ACCESS_TEAM_DOMAIN || env.ACCESS_AUD.startsWith('REPLACE') ||
+        !/^[a-z0-9-]+\.cloudflareaccess\.com$/.test(env.ACCESS_TEAM_DOMAIN)) {
+        throw new HttpError(503, 'Dashboard authentication is not configured');
+    }
 
     const token = request.headers.get('Cf-Access-Jwt-Assertion');
     if (!token) throw new HttpError(401, 'Unauthorized');
 
-    const [h, p, s] = token.split('.');
-    if (!h || !p || !s) throw new HttpError(401, 'Unauthorized');
+    const parts = token.split('.');
+    const [h, p, s] = parts;
+    if (parts.length !== 3 || !h || !p || !s) throw new HttpError(401, 'Unauthorized');
 
     let header, payload;
     try {
@@ -89,7 +96,8 @@ async function verifyAccess(request, env) {
 
     if (
         !valid ||
-        payload.exp * 1000 < Date.now() ||
+        !Number.isFinite(payload.exp) || payload.exp <= Date.now() / 1000 ||
+        (payload.nbf !== undefined && (!Number.isFinite(payload.nbf) || payload.nbf > Date.now() / 1000)) ||
         !aud.includes(env.ACCESS_AUD) ||
         payload.iss !== `https://${env.ACCESS_TEAM_DOMAIN}`
     ) {
@@ -113,6 +121,7 @@ async function verifyAccess(request, env) {
    ========================================================= */
 
 async function gh(env, path, init = {}) {
+    if (!env.GITHUB_TOKEN) throw new HttpError(503, 'GitHub access has not been configured');
     const res = await fetch(
         `https://api.github.com/repos/${env.GITHUB_OWNER}/${env.GITHUB_REPO}${path}`,
         {
@@ -149,8 +158,8 @@ async function readData(env, ref) {
         headers: { Accept: 'application/vnd.github.raw+json' }
     });
     const data = JSON.parse(await res.text());
-    data.categories ||= [];
-    data.photos ||= [];
+    const errors = validateData(data);
+    if (errors.length) throw new HttpError(409, 'Photography data is invalid. Repair it before editing.');
     return data;
 }
 
@@ -186,10 +195,13 @@ async function commitChange(env, message, build) {
 
         const entries = [];
 
-        await Promise.all((out.files || []).map(async (f) => {
-            const blob = await ghJson(env, '/git/blobs', post({ content: toBase64(f.bytes), encoding: 'base64' }));
+        const errors = validateData(data);
+        if (errors.length) throw new HttpError(400, errors[0]);
+        for (const f of out.files || []) {
+            const bytes = new Uint8Array(await f.file.arrayBuffer());
+            const blob = await ghJson(env, '/git/blobs', post({ content: toBase64(bytes), encoding: 'base64' }));
             entries.push({ path: f.path, mode: '100644', type: 'blob', sha: blob.sha });
-        }));
+        }
 
         for (const m of out.moves || []) {
             const meta = await ghJson(env, `/contents/${encodePath(m.from)}?ref=${headSha}`);
@@ -216,9 +228,15 @@ async function commitChange(env, message, build) {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ sha: commit.sha, force: false })
             });
-            return out.result;
+            return { ...out.result, commitSha: commit.sha };
         } catch (err) {
-            if (err.status === 422 && attempt < 2) continue; // branch moved, try again
+            if (err.status === 409 || err.status === 422) {
+                const latest = await ghJson(env, '/git/ref/heads/' + branch);
+                if (latest.object.sha !== headSha) {
+                    if (attempt < 2) continue;
+                    throw new HttpError(409, 'Repository changed while saving. Please try again.');
+                }
+            }
             throw err;
         }
     }
@@ -231,12 +249,6 @@ async function commitChange(env, message, build) {
    VALIDATION HELPERS
    ========================================================= */
 
-const isDate = (v) => {
-    if (typeof v !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(v)) return false;
-    const d = new Date(v + 'T00:00:00Z');
-    return !isNaN(d) && d.toISOString().slice(0, 10) === v;
-};
-
 const cleanText = (v, max, label) => {
     const s = String(v ?? '').trim();
     if (s.length > max) throw new HttpError(400, `${label} is too long (max ${max})`);
@@ -248,29 +260,15 @@ const cleanBilingual = (v, max, label) => ({
     ar: cleanText(v?.ar, max, label)
 });
 
-const SLUG = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 
-const srcToPath = (src) => {
-    let path;
-    try {
-        path = decodeURIComponent(String(src)).replace(/^\//, '');
-    } catch {
-        throw new HttpError(400, 'Bad photo path');
-    }
-    if (!path.startsWith(`${PHOTO_DIR}/`) || path.includes('..')) {
-        throw new HttpError(400, 'Bad photo path');
-    }
-    return path;
+
+const srcToPath = src => {
+    try { return photoPath(src); } catch { throw new HttpError(400, 'Bad photo path'); }
 };
 
 const pathToSrc = (path) => '/' + path.split('/').map(encodeURIComponent).join('/');
 
 const encodePath = (path) => path.split('/').map(encodeURIComponent).join('/');
-
-const isWebp = (b) =>
-    b.length > 12 &&
-    String.fromCharCode(...b.subarray(0, 4)) === 'RIFF' &&
-    String.fromCharCode(...b.subarray(8, 12)) === 'WEBP';
 
 function safeFileName(name) {
     const stem = name.replace(/\.[^.]+$/, '')
@@ -301,7 +299,30 @@ const today = () => new Date().toISOString().slice(0, 10);
    ========================================================= */
 
 async function uploadPhotos(request, env) {
-    const form = await request.formData();
+    const limit = MAX_TOTAL_BYTES + 256 * 1024;
+    if (Number(request.headers.get('Content-Length')) > limit) throw new HttpError(413, 'Upload is too large');
+    let received = 0;
+    const reader = request.body?.getReader();
+    if (!reader) throw new HttpError(400, 'No upload body');
+    const bounded = new ReadableStream({
+        async pull(controller) {
+            const item = await reader.read();
+            if (item.done) return controller.close();
+            received += item.value.byteLength;
+            if (received > limit) {
+                await reader.cancel();
+                return controller.error(new HttpError(413, 'Upload is too large'));
+            }
+            controller.enqueue(item.value);
+        },
+        cancel(reason) { return reader.cancel(reason); }
+    });
+    let form;
+    try { form = await new Request(request, { body: bounded, duplex: 'half' }).formData(); }
+    catch (error) {
+        if (received > limit) throw new HttpError(413, 'Upload is too large');
+        throw new HttpError(400, 'Invalid upload body');
+    }
     const files = form.getAll('file').filter((f) => typeof f !== 'string');
 
     let meta;
@@ -313,7 +334,7 @@ async function uploadPhotos(request, env) {
 
     if (!files.length) throw new HttpError(400, 'No files');
     if (files.length > MAX_FILES) throw new HttpError(400, `Max ${MAX_FILES} files per upload`);
-    if (meta.length !== files.length) throw new HttpError(400, 'Metadata does not match files');
+    if (!Array.isArray(meta) || meta.length !== files.length) throw new HttpError(400, 'Metadata does not match files');
 
     const total = files.reduce((sum, f) => sum + f.size, 0);
     if (total > MAX_TOTAL_BYTES) throw new HttpError(413, 'Upload is too large');
@@ -325,14 +346,13 @@ async function uploadPhotos(request, env) {
         if (file.size > MAX_FILE_BYTES) throw new HttpError(413, `${file.name} is larger than 8 MB`);
 
         const bytes = new Uint8Array(await file.arrayBuffer());
-        if (!isWebp(bytes)) throw new HttpError(400, `${file.name} is not a WebP image`);
+        try { webpInfo(bytes); } catch { throw new HttpError(400, file.name + ' is not a valid static WebP image'); }
 
         const m = meta[i] || {};
         if (m.takenAt && !isDate(m.takenAt)) throw new HttpError(400, `Bad date for ${file.name}`);
 
         prepared.push({
             file,
-            bytes,
             category: String(m.category || ''),
             title: cleanBilingual(m.title, MAX_TITLE, 'Title'),
             description: cleanBilingual(m.description, MAX_DESC, 'Description'),
@@ -351,7 +371,7 @@ async function uploadPhotos(request, env) {
             }
 
             const path = uniquePath(`${PHOTO_DIR}/${p.category}`, safeFileName(p.file.name), taken);
-            filesOut.push({ path, bytes: p.bytes });
+            filesOut.push({ path, file: p.file });
 
             added.push({
                 src: `/${path}`,
@@ -373,7 +393,7 @@ async function uploadPhotos(request, env) {
 async function updatePhotos(request, env) {
     const { items } = await request.json();
     if (!Array.isArray(items) || !items.length) throw new HttpError(400, 'No items');
-    if (items.length > 200) throw new HttpError(400, 'Too many items');
+    if (items.length > 200 || new Set(items.map(item => item?.src)).size !== items.length) throw new HttpError(400, 'Too many items');
 
     return commitChange(env, `photos: update ${items.length} via dashboard`, async (data) => {
         const taken = takenPaths(data);
@@ -415,7 +435,7 @@ async function updatePhotos(request, env) {
 /** Body: { srcs: [...] } */
 async function deletePhotos(request, env) {
     const { srcs } = await request.json();
-    if (!Array.isArray(srcs) || !srcs.length) throw new HttpError(400, 'No items');
+    if (!Array.isArray(srcs) || !srcs.length || srcs.length > 200 || new Set(srcs).size !== srcs.length) throw new HttpError(400, 'No items');
 
     return commitChange(env, `photos: delete ${srcs.length} via dashboard`, async (data) => {
         const deletes = [];
@@ -436,7 +456,7 @@ async function addCategory(request, env) {
     const id = String(body.id || '').trim();
     const name = cleanBilingual(body.name, 60, 'Name');
 
-    if (!SLUG.test(id) || id.length > 40) {
+    if (!SLUG.test(id) || id.length > 40 || RESERVED_CATEGORIES.has(id)) {
         throw new HttpError(400, 'Category id must be lowercase letters, numbers and dashes');
     }
     if (!name.en || !name.ar) throw new HttpError(400, 'Name is required in both languages');
@@ -485,7 +505,9 @@ async function getState(env) {
         config: {
             siteOrigin: env.SITE_ORIGIN || '',
             maxFiles: MAX_FILES,
-            maxFileMB: MAX_FILE_BYTES / 1024 / 1024
+            maxFileMB: MAX_FILE_BYTES / 1024 / 1024,
+            maxTotalMB: MAX_TOTAL_BYTES / 1024 / 1024,
+            branch
         }
     };
 }
@@ -494,6 +516,21 @@ async function getState(env) {
 /* =========================================================
    ROUTER
    ========================================================= */
+
+async function publication(request, env) {
+    const commit = new URL(request.url).searchParams.get('commit');
+    if (!/^[a-f0-9]{40}$/.test(commit || '')) throw new HttpError(400, 'Invalid commit');
+    const origin = new URL(env.SITE_ORIGIN || 'https://zayedart.com');
+    if (origin.protocol !== 'https:') throw new HttpError(503, 'Site origin must use HTTPS');
+    const res = await fetch(new URL('/_site/version.json?t=' + Date.now(), origin), { headers: { 'Cache-Control': 'no-cache' } });
+    if (!res.ok) return { status: 'pending' };
+    let live;
+    try { live = (await res.json()).commit; } catch { return { status: 'pending' }; }
+    if (!/^[a-f0-9]{40}$/.test(live || '')) return { status: 'pending' };
+    if (live === commit) return { status: 'published', commit: live };
+    const comparison = await ghJson(env, '/compare/' + commit + '...' + live);
+    return { status: ['ahead', 'identical'].includes(comparison.status) ? 'published' : 'pending', commit: live };
+}
 
 const routes = {
     'POST /api/photos': uploadPhotos,
@@ -516,6 +553,7 @@ export default {
                 throw new HttpError(403, 'Bad origin');
             }
 
+            if (request.method === 'GET' && url.pathname === '/api/publication') return json(await publication(request, env));
             if (request.method === 'GET' && url.pathname === '/api/state') {
                 return json(await getState(env));
             }
@@ -531,3 +569,5 @@ export default {
         }
     }
 };
+
+export { verifyAccess, commitChange };

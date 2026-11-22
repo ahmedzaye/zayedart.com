@@ -2849,7 +2849,7 @@ html[dir="rtl"] .za-nav-links {
    ========================================================= */
 
 @media (max-width: 900px) {
-/*
+
     .za-nav-links {
         display: none;
     }
@@ -2857,7 +2857,7 @@ html[dir="rtl"] .za-nav-links {
     .za-menu-btn {
         display: flex !important;
     }
-*/
+
     .za-about-grid {
         grid-template-columns: 1fr;
 

@@ -1,0 +1,13 @@
+import fs from 'node:fs';
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {validateData,photoPath,webpInfo,isDate} from '../shared/photography.mjs';
+const source=JSON.parse(fs.readFileSync(new URL('../data/photography.json',import.meta.url)));
+test('current gallery content has valid optional metadata',()=>assert.deepEqual(validateData(source),[]));
+test('reserved all category cannot shadow the gallery filter',()=>{const d=structuredClone(source);d.categories.push({id:'all',name:{en:'All',ar:'All'}});assert.ok(validateData(d).some(e=>e.includes('reserved')));});
+test('invalid and leap-day dates are checked strictly',()=>{assert.equal(isDate('2026-02-30'),false);assert.equal(isDate('2024-02-29'),true);assert.equal(isDate('2026-02-29'),false);});
+test('missing files fail validation',()=>assert.ok(validateData(source,()=>false).some(e=>e.includes('Missing file'))));
+test('duplicate image paths fail validation',()=>{const d=structuredClone(source);d.photos.push(d.photos[0]);assert.ok(validateData(d).some(e=>e.includes('Duplicate photo')));});
+test('encoded traversal, query strings, and backslashes are rejected',()=>{for(const s of ['/assets/photography/cairo/%2e%2e%2fx.webp','/assets/photography/cairo/x.webp?secret','/assets/photography/cairo/a%5cb.webp'])assert.throws(()=>photoPath(s));});
+test('13-byte RIFF signature is not an image',()=>assert.throws(()=>webpInfo(new TextEncoder().encode('RIFF0000WEBPx'))));
+test('truncated RIFF payload is rejected',()=>{const b=new Uint8Array(22);b.set(Buffer.from('RIFF'));new DataView(b.buffer).setUint32(4,100,true);b.set(Buffer.from('WEBPVP8 '),8);assert.throws(()=>webpInfo(b));});

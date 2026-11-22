@@ -1,0 +1,25 @@
+name: Validate photography and dashboard
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-audit --no-fund
+      - run: npm run validate
+      - run: npm run build
+      - name: Bundle dashboard without deployment
+        run: npx --yes wrangler deploy --dry-run --config admin/wrangler.jsonc --outdir .worker-check
+      - name: Save preview build
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-preview
+          path: dist
+          retention-days: 7

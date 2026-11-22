@@ -31,9 +31,9 @@
     >
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://zayedart.com/">
-<meta property="og:title" content="Zayed Art — Digital Design & Technology">
-<meta property="og:description" content="Design, technology, and digital thinking — brought together to create purposeful digital experiences.">
+<meta property="og:url" content="https://zayedart.com/photography">
+<meta property="og:title" content="Photography - Zayed Art">
+<meta property="og:description" content="Street photography, heritage, architecture, and places across Egypt and the UAE by Zayed Art.">
 <meta property="og:image" content="https://zayedart.com/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -48,6 +48,7 @@
 <link rel="icon" type="image/svg+xml" href="assets/azlogow.svg">
 <link rel="apple-touch-icon" href="assets/azlogo.png">
 
+<link rel="canonical" href="https://zayedart.com/photography">
 </head>
 
 
@@ -140,9 +141,7 @@
                 Showing curated shots from an archive of +4,000+ photos. More are being uploaded continuously.
             </p><br>
 
-        <div class="za-photo-filters">
-            
-
+        <div class="za-photo-filters" id="photoFilters">
             <button
                 class="za-photo-filter active"
                 data-category="all"
@@ -151,43 +150,6 @@
             >
                 All
             </button>
-
-            <button
-                class="za-photo-filter"
-                data-category="alexandria"
-                type="button"
-                data-i18n="pgFilterAlexandria"
-            >
-                Alexandria
-            </button>
-
-            <button
-                class="za-photo-filter"
-                data-category="cairo"
-                type="button"
-                data-i18n="pgFilterCairo"
-            >
-                Cairo
-            </button>
-
-            <button
-                class="za-photo-filter"
-                data-category="matrouh"
-                type="button"
-                data-i18n="pgFilterMatrouh"
-            >
-                Matrouh
-            </button>
-
-            <button
-                class="za-photo-filter"
-                data-category="uae"
-                type="button"
-                data-i18n="pgFilterUAE"
-            >
-                UAE
-            </button>
-
         </div>
 
 
@@ -233,6 +195,7 @@
     id="lightbox"
     role="dialog"
     aria-modal="true"
+    aria-hidden="true"
     aria-label="Photography viewer"
 >
 
@@ -271,414 +234,16 @@
         ›
     </button>
 
-    <div
-        class="za-lightbox-info"
-        id="lightboxInfo"
-    ></div>
+    <div class="za-lightbox-info" id="lightboxInfo">
+        <h2 class="za-lightbox-title" id="lightboxTitle"></h2>
+        <p class="za-lightbox-desc" id="lightboxDesc"></p>
+        <p class="za-lightbox-meta" id="lightboxMeta"></p>
+    </div>
 
 </div>
 
 
-<!-- =========================================================
-     GENERATED PHOTOGRAPHY DATA
-     ========================================================= -->
-
-<script src="js/photography.js"></script>
-
-
-<!-- =========================================================
-     PHOTOGRAPHY PAGE SCRIPT
-     ========================================================= -->
-
-<script>
-
-    const photoGrid = document.getElementById('photoGrid');
-    const photoCount = document.getElementById('photoCount');
-
-    const filters = document.querySelectorAll('.za-photo-filter');
-
-    const lightbox = document.getElementById('lightbox');
-    const lightboxImage = document.getElementById('lightboxImage');
-    const lightboxInfo = document.getElementById('lightboxInfo');
-
-    const lightboxClose = document.getElementById('lightboxClose');
-    const lightboxPrev = document.getElementById('lightboxPrev');
-    const lightboxNext = document.getElementById('lightboxNext');
-
-
-    /* =====================================================
-       CATEGORY LABELS
-       ===================================================== */
-
-    const categoryNamesByLang = {
-        en: {
-            alexandria: 'Alexandria',
-            cairo: 'Cairo',
-            matrouh: 'Matrouh',
-            uae: 'UAE'
-        },
-
-        ar: {
-            alexandria: 'الإسكندرية',
-            cairo: 'القاهرة',
-            matrouh: 'مطروح',
-            uae: 'الإمارات'
-        }
-    };
-
-
-    function getCategoryNames() {
-
-        return (
-            categoryNamesByLang[
-                document.documentElement.lang
-            ] ||
-            categoryNamesByLang.en
-        );
-
-    }
-
-
-    function buildCountText(n) {
-
-        if (document.documentElement.lang === 'ar') {
-            return `${n} صورة`;
-        }
-
-        return `${n} photograph${n === 1 ? '' : 's'}`;
-
-    }
-
-
-    /* =====================================================
-       BUILD PHOTO LIST
-       ===================================================== */
-
-    const allPhotos = [];
-
-    Object.keys(photography).forEach(category => {
-
-        photography[category].forEach(src => {
-
-            allPhotos.push({
-                src: src,
-                category: category
-            });
-
-        });
-
-    });
-
-
-    /* =====================================================
-       RENDER GALLERY
-       ===================================================== */
-
-    function renderGallery(category = 'all') {
-
-        photoGrid.innerHTML = '';
-
-        let visiblePhotos;
-
-        if (category === 'all') {
-
-            visiblePhotos = allPhotos;
-
-        } else {
-
-            visiblePhotos = allPhotos.filter(
-                photo => photo.category === category
-            );
-
-        }
-
-
-        photoCount.textContent =
-            buildCountText(visiblePhotos.length);
-
-
-        visiblePhotos.forEach((photo, index) => {
-
-            const item = document.createElement('article');
-
-            item.className = 'za-photo-item';
-
-            item.dataset.category = photo.category;
-
-
-            const image = document.createElement('img');
-
-            image.src = photo.src;
-
-            image.alt =
-                `${getCategoryNames()[photo.category] || photo.category} photography`;
-
-            image.loading = 'lazy';
-
-            image.decoding = 'async';
-
-            image.draggable = false;
-
-
-            const watermark = document.createElement('span');
-
-            watermark.className = 'za-photo-watermark';
-
-            watermark.textContent = 'ZAYED ART';
-
-
-            item.appendChild(image);
-            item.appendChild(watermark);
-
-
-            item.addEventListener('click', () => {
-
-                openLightbox(
-                    visiblePhotos,
-                    index
-                );
-
-            });
-
-
-            photoGrid.appendChild(item);
-
-        });
-
-    }
-
-
-    /* =====================================================
-       FILTERS
-       ===================================================== */
-
-    filters.forEach(button => {
-
-        button.addEventListener('click', () => {
-
-            filters.forEach(filter => {
-                filter.classList.remove('active');
-            });
-
-            button.classList.add('active');
-
-            renderGallery(
-                button.dataset.category
-            );
-
-        });
-
-    });
-
-
-    /* =====================================================
-       LIGHTBOX STATE
-       ===================================================== */
-
-    let currentPhotos = [];
-    let currentIndex = 0;
-
-
-    function openLightbox(photos, index) {
-
-        currentPhotos = photos;
-        currentIndex = index;
-
-        updateLightbox();
-
-        lightbox.classList.add('open');
-
-        document.body.style.overflow = 'hidden';
-
-    }
-
-
-    function updateLightbox() {
-
-        const photo = currentPhotos[currentIndex];
-
-        if (!photo) return;
-
-
-        lightboxImage.src = photo.src;
-
-        lightboxImage.alt =
-            `${getCategoryNames()[photo.category] || photo.category} photography`;
-
-
-        lightboxInfo.textContent =
-            `${getCategoryNames()[photo.category] || photo.category} · ${currentIndex + 1} / ${currentPhotos.length}`;
-
-    }
-
-
-    function closeLightbox() {
-
-        lightbox.classList.remove('open');
-
-        document.body.style.overflow = '';
-
-        setTimeout(() => {
-
-            if (!lightbox.classList.contains('open')) {
-                lightboxImage.src = '';
-            }
-
-        }, 200);
-
-    }
-
-
-    function showPrevious() {
-
-        if (!currentPhotos.length) return;
-
-        currentIndex =
-            (currentIndex - 1 + currentPhotos.length)
-            % currentPhotos.length;
-
-        updateLightbox();
-
-    }
-
-
-    function showNext() {
-
-        if (!currentPhotos.length) return;
-
-        currentIndex =
-            (currentIndex + 1)
-            % currentPhotos.length;
-
-        updateLightbox();
-
-    }
-
-
-    /* =====================================================
-       LANGUAGE
-       ===================================================== */
-
-    function toggleLanguage() {
-
-        const newLang =
-            document.documentElement.lang === 'ar'
-                ? 'en'
-                : 'ar';
-
-        setLanguage(newLang);
-
-
-        const activeFilter =
-            document.querySelector(
-                '.za-photo-filter.active'
-            );
-
-
-        renderGallery(
-            activeFilter
-                ? activeFilter.dataset.category
-                : 'all'
-        );
-
-
-        if (lightbox.classList.contains('open')) {
-            updateLightbox();
-        }
-
-    }
-
-
-    /* =====================================================
-       LIGHTBOX CONTROLS
-       ===================================================== */
-
-    lightboxClose.addEventListener(
-        'click',
-        closeLightbox
-    );
-
-    lightboxPrev.addEventListener(
-        'click',
-        showPrevious
-    );
-
-    lightboxNext.addEventListener(
-        'click',
-        showNext
-    );
-
-
-    /* Click outside image */
-
-    lightbox.addEventListener('click', event => {
-
-        if (event.target === lightbox) {
-            closeLightbox();
-        }
-
-    });
-
-
-    /* Keyboard controls */
-
-    document.addEventListener('keydown', event => {
-
-        if (!lightbox.classList.contains('open')) {
-            return;
-        }
-
-        if (event.key === 'Escape') {
-            closeLightbox();
-        }
-
-        if (event.key === 'ArrowLeft') {
-            showPrevious();
-        }
-
-        if (event.key === 'ArrowRight') {
-            showNext();
-        }
-
-    });
-
-
-    /* =====================================================
-       BASIC IMAGE PROTECTION
-       ===================================================== */
-
-    document.addEventListener('contextmenu', event => {
-
-        if (
-            event.target.tagName === 'IMG' ||
-            event.target.closest('.za-photo-item') ||
-            event.target.closest('.za-lightbox')
-        ) {
-            event.preventDefault();
-        }
-
-    });
-
-
-    /* Prevent dragging images */
-
-    document.addEventListener('dragstart', event => {
-
-        if (event.target.tagName === 'IMG') {
-            event.preventDefault();
-        }
-
-    });
-
-
-    /* =====================================================
-       INITIAL LOAD
-       ===================================================== */
-
-    renderGallery();
-
-</script>
-
+<script src="js/photography-page.js" defer></script>
 
 </body>
 </html>

@@ -3,6 +3,29 @@
 Public site: https://zayedart.com
 Owner dashboard: https://dashcontrol.zayedart.com
 
+## First dashboard deployment with Workers Builds
+
+The dashboard and public website are separate Workers connected to the same repo.
+
+| Setting | Dashboard Worker |
+| --- | --- |
+| Project name | `zayedart-admin` |
+| Initial production branch | `feature/photography-dashboard-release` |
+| Root directory | `/` |
+| Build command | Empty |
+| Deploy command | `npx wrangler deploy --config admin/wrangler.jsonc` |
+| Preview builds | Disabled |
+
+The initial branch must contain `admin/wrangler.jsonc`. Before the release is
+merged, `main` does not contain that file. After changing the production branch,
+start a fresh build from a new push or the latest commit on the selected branch;
+retrying an older build can keep the old commit that was missing the file.
+
+After merging this release, change the dashboard Worker's production branch to
+`main`. Keep the public website Worker on `main` throughout. The dashboard's
+`GITHUB_BRANCH` runtime variable is the destination for photo/content writes;
+it is separate from the source branch selected in Workers Builds.
+
 ## Before merging into main
 
 1. Confirm that the release branch workflow succeeds (tests, all image files,

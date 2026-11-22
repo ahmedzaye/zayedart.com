@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>لوحة التحكم — Zayed Art</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;600&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:,">
+</head>
+<body>
+
+<header class="top">
+    <span class="brand">ZAYED<span>.</span>ART <small>ADMIN</small></span>
+    <nav>
+        <a href="#upload">رفع</a>
+        <a href="#categories">الأقسام</a>
+        <a href="#library">المكتبة</a>
+        <a id="siteLink" href="https://zayedart.com/photography.html" target="_blank" rel="noopener">فتح المعرض ↗</a>
+    </nav>
+</header>
+
+<main>
+
+    <p class="notice" id="deployNote" hidden></p>
+
+    <!-- ================= UPLOAD ================= -->
+    <section id="upload" class="card">
+        <h2>رفع صور جديدة</h2>
+        <p class="hint">صور WebP جاهزة فقط. الحد الأقصى <span id="maxFiles">20</span> صورة في المرة، و<span id="maxMB">8</span> ميجا للصورة.</p>
+
+        <label class="drop" id="drop">
+            <input type="file" id="fileInput" accept="image/webp,.webp" multiple hidden>
+            <strong>اسحب الصور هنا أو اضغط للاختيار</strong>
+        </label>
+
+        <div class="bulk" id="uploadBulk" hidden>
+            <span>تطبيق على الكل:</span>
+            <select id="bulkCategory"></select>
+            <input type="date" id="bulkDate">
+            <button type="button" class="btn ghost" id="applyBulk">تطبيق</button>
+        </div>
+
+        <div id="queue" class="queue"></div>
+
+        <div class="actions" id="uploadActions" hidden>
+            <button type="button" class="btn primary" id="uploadBtn">رفع ونشر</button>
+            <button type="button" class="btn ghost" id="clearQueue">مسح القائمة</button>
+            <span class="status" id="uploadStatus"></span>
+        </div>
+    </section>
+
+    <!-- ================= CATEGORIES ================= -->
+    <section id="categories" class="card">
+        <h2>الأقسام</h2>
+        <div id="catList" class="cats"></div>
+
+        <form id="catForm" class="row">
+            <input name="id" placeholder="المعرّف (إنجليزي صغير، مثال: siwa)" pattern="[a-z0-9]+(-[a-z0-9]+)*" required dir="ltr">
+            <input name="en" placeholder="الاسم بالإنجليزي" required dir="ltr">
+            <input name="ar" placeholder="الاسم بالعربي" required>
+            <button class="btn primary">إضافة قسم</button>
+        </form>
+    </section>
+
+    <!-- ================= LIBRARY ================= -->
+    <section id="library" class="card">
+        <h2>المكتبة <small id="libCount"></small></h2>
+
+        <div class="row filters">
+            <select id="fCategory"></select>
+            <input type="search" id="fSearch" placeholder="بحث بالعنوان أو اسم الملف">
+            <label class="chip"><input type="checkbox" id="fNoDate"> بدون تاريخ</label>
+            <label class="chip"><input type="checkbox" id="fNoTitle"> بدون عنوان</label>
+        </div>
+
+        <div class="bulkbar" id="selBar" hidden>
+            <strong id="selCount"></strong>
+            <input type="date" id="selDate">
+            <button type="button" class="btn ghost" id="selApplyDate">تعيين التاريخ</button>
+            <select id="selCategory"></select>
+            <button type="button" class="btn ghost" id="selMove">نقل للقسم</button>
+            <button type="button" class="btn danger" id="selDelete">حذف</button>
+            <button type="button" class="btn ghost" id="selClear">إلغاء التحديد</button>
+        </div>
+
+        <div id="grid" class="grid"></div>
+    </section>
+
+</main>
+
+<dialog id="editDialog">
+    <form method="dialog" id="editForm">
+        <img id="editImg" alt="">
+        <div class="fields">
+            <label>القسم <select id="eCategory"></select></label>
+            <label>تاريخ الالتقاط <input type="date" id="eDate"></label>
+            <label>العنوان (EN) <input id="eTitleEn" dir="ltr" maxlength="200"></label>
+            <label>العنوان (AR) <input id="eTitleAr" maxlength="200"></label>
+            <label>الوصف (EN) <textarea id="eDescEn" dir="ltr" rows="3" maxlength="2000"></textarea></label>
+            <label>الوصف (AR) <textarea id="eDescAr" rows="3" maxlength="2000"></textarea></label>
+            <p class="path" id="ePath" dir="ltr"></p>
+        </div>
+        <div class="actions">
+            <button type="button" class="btn primary" id="eSave">حفظ</button>
+            <button type="button" class="btn ghost" id="eCancel">إلغاء</button>
+            <button type="button" class="btn danger" id="eDelete">حذف الصورة</button>
+            <span class="status" id="eStatus"></span>
+        </div>
+    </form>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="app.js"></script>
+</body>
+</html>

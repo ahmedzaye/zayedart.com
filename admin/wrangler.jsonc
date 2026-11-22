@@ -1,0 +1,32 @@
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "zayedart-admin",
+  "main": "src/index.js",
+  "compatibility_date": "2026-09-15",
+
+  // Static dashboard (public/) + API (/api/*) in one Worker
+  "assets": {
+    "directory": "./public",
+    "run_worker_first": ["/api/*"]
+  },
+
+  // Needs the zayedart.com zone on Cloudflare
+  "routes": [
+    { "pattern": "admin.zayedart.com", "custom_domain": true }
+  ],
+
+  "vars": {
+    "GITHUB_OWNER": "ahmedzaye",
+    "GITHUB_REPO": "zayedart.com",
+    "GITHUB_BRANCH": "main",
+    "SITE_ORIGIN": "https://zayedart.com",
+
+    // From: Zero Trust > Settings > Custom Pages / team domain, and the Access application's "Audience (AUD) tag"
+    "ACCESS_TEAM_DOMAIN": "REPLACE-ME.cloudflareaccess.com",
+    "ACCESS_AUD": "REPLACE_WITH_ACCESS_APPLICATION_AUD_TAG"
+  }
+
+  // Secrets (never commit):
+  //   npx wrangler secret put GITHUB_TOKEN     fine-grained PAT, this repo only, Contents: Read and write
+  //   npx wrangler secret put ALLOWED_EMAILS   optional extra allow-list, comma separated
+}

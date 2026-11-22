@@ -1,5 +1,6 @@
 .git/
 .github/
 node_modules/
-generate-photography.js
 wrangler.jsonc
+admin/
+scripts/

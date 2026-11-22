@@ -3,7 +3,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {webcrypto as crypto} from 'node:crypto';
 import worker,{verifyAccess} from '../admin/src/index.js';
-const original=JSON.parse(fs.readFileSync(new URL('../data/photography.json',import.meta.url)));
+const original={
+ categories:[{id:'cairo',name:{en:'Cairo',ar:'Cairo'}},{id:'matrouh',name:{en:'Matrouh',ar:'Matrouh'}}],
+ photos:[{src:'/assets/photography/cairo/example.webp',category:'cairo',title:{en:'',ar:''},description:{en:'',ar:''},takenAt:null,uploadedAt:null}]
+};
 const keys=await crypto.subtle.generateKey({name:'RSASSA-PKCS1-v1_5',modulusLength:2048,publicExponent:new Uint8Array([1,0,1]),hash:'SHA-256'},true,['sign','verify']);
 const jwk=await crypto.subtle.exportKey('jwk',keys.publicKey);jwk.kid='test';
 const env={ACCESS_TEAM_DOMAIN:'test.cloudflareaccess.com',ACCESS_AUD:'test-aud',GITHUB_OWNER:'test',GITHUB_REPO:'site',GITHUB_TOKEN:'mock',SITE_ORIGIN:'https://public.example'};
@@ -53,7 +56,7 @@ test('publication recognizes the deployed commit',()=>run(async()=>{const r=awai
 
 test('upload, edit, move and delete stay atomic through the complete content lifecycle',()=>run(async mock=>{
  const form=new FormData();form.append('file',new Blob([Buffer.from('UklGRiIAAABXRUJQVlA4IBYAAAAwAQCdASoBAAEADsD+JaQAA3AAAAAA','base64')],{type:'image/webp'}),'one.webp');form.append('meta',JSON.stringify([{category:'cairo',title:{en:'Test shot',ar:''},description:{en:'Optional caption',ar:''},takenAt:'2026-11-22'}]));
- let r=await call('POST','/api/photos',form);assert.equal(r.status,200);const added=(await r.json()).photos[0];assert.equal(mock.data.photos.length,84);assert.equal(mock.writes,1);
+ let r=await call('POST','/api/photos',form);assert.equal(r.status,200);const added=(await r.json()).photos[0];assert.equal(mock.data.photos.length,original.photos.length+1);assert.equal(mock.writes,1);
  r=await call('PATCH','/api/photos',{items:[{src:added.src,category:'matrouh',title:{en:'Edited title',ar:''}}]});assert.equal(r.status,200);const moved=mock.data.photos.find(p=>p.title.en==='Edited title');assert.ok(moved.src.startsWith('/assets/photography/matrouh/'));assert.equal(mock.writes,2);
- r=await call('DELETE','/api/photos',{srcs:[moved.src]});assert.equal(r.status,200);assert.equal(mock.data.photos.length,83);assert.equal(mock.writes,3);
+ r=await call('DELETE','/api/photos',{srcs:[moved.src]});assert.equal(r.status,200);assert.equal(mock.data.photos.length,original.photos.length);assert.equal(mock.writes,3);
 }));

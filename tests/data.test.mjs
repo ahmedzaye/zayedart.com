@@ -3,7 +3,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {validateData,photoPath,webpInfo,isDate} from '../shared/photography.mjs';
 const source=JSON.parse(fs.readFileSync(new URL('../data/photography.json',import.meta.url)));
-test('all 83 migrated photos have valid optional metadata',()=>assert.deepEqual(validateData(source),[]));
+test('current gallery content has valid optional metadata',()=>assert.deepEqual(validateData(source),[]));
 test('reserved all category cannot shadow the gallery filter',()=>{const d=structuredClone(source);d.categories.push({id:'all',name:{en:'All',ar:'All'}});assert.ok(validateData(d).some(e=>e.includes('reserved')));});
 test('invalid and leap-day dates are checked strictly',()=>{assert.equal(isDate('2026-02-30'),false);assert.equal(isDate('2024-02-29'),true);assert.equal(isDate('2026-02-29'),false);});
 test('missing files fail validation',()=>assert.ok(validateData(source,()=>false).some(e=>e.includes('Missing file'))));

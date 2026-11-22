@@ -24,7 +24,7 @@
     "SITE_ORIGIN": "https://zayedart.com",
 
     // From: Zero Trust > Settings > Custom Pages / team domain, and the Access application's "Audience (AUD) tag"
-    "ACCESS_TEAM_DOMAIN": "REPLACE-ME.cloudflareaccess.com",
+    "ACCESS_TEAM_DOMAIN": "broad-lab-ffa4.cloudflareaccess.com",
     "ACCESS_AUD": "2519bbd40e68634e5fad59c6da3a9d7ca65da9594f474fdcc957b259087de94a"
   }
 

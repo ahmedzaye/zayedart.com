@@ -679,7 +679,8 @@ const translations = {
 // 1. اكتشاف لغة جهاز المستخدم تلقائياً
 function getPreferredLanguage() {
   // التحقق أولاً إذا كان المستخدم اختار لغة من قبل وتخزينها
-  const savedLang = localStorage.getItem("user_lang");
+  let savedLang;
+  try { savedLang = localStorage.getItem("user_lang"); } catch { /* use browser preference */ }
   if (savedLang) return savedLang;
 
   // معرفة لغة جهاز/متصفح الزائر (مثال: 'ar-EG' أو 'en-US')
@@ -698,7 +699,7 @@ function setLanguage(lang) {
   document.documentElement.dir = currentData.dir;
 
   // حفظ تفضيل المستخدم
-  localStorage.setItem("user_lang", lang);
+  try { localStorage.setItem("user_lang", lang); } catch { /* storage may be disabled */ }
 
   // تحديث كافة العناصر المسندة بـ data-i18n
   document.querySelectorAll("[data-i18n]").forEach(element => {

@@ -177,13 +177,14 @@ const toBase64 = (bytes) => {
  * push everything as one commit. Retries if someone else pushed in between.
  *
  * build(data, ctx) mutates `data` and returns:
- *   { files: [{ path, bytes }],           // files to add/replace
+ *   { files: [{ path, file }],           // files to add/replace
  *     deletes: [path],                    // files to remove
  *     moves: [{ from, to }],              // files to rename (keeps the blob)
  *     result }                            // returned to the caller
  */
 async function commitChange(env, message, build) {
     const branch = env.GITHUB_BRANCH || 'main';
+    const uploadBlobs = new Map();
 
     for (let attempt = 0; attempt < 3; attempt++) {
         const ref = await ghJson(env, `/git/ref/heads/${branch}`);
@@ -198,13 +199,24 @@ async function commitChange(env, message, build) {
         const errors = validateData(data);
         if (errors.length) throw new HttpError(400, errors[0]);
         for (const f of out.files || []) {
-            const bytes = new Uint8Array(await f.file.arrayBuffer());
-            const blob = await ghJson(env, '/git/blobs', post({ content: toBase64(bytes), encoding: 'base64' }));
+            let blob = uploadBlobs.get(f.file);
+            if (!blob) {
+                const bytes = new Uint8Array(await f.file.arrayBuffer());
+                blob = await ghJson(env, '/git/blobs', post({ content: toBase64(bytes), encoding: 'base64' }));
+                uploadBlobs.set(f.file, blob);
+            }
             entries.push({ path: f.path, mode: '100644', type: 'blob', sha: blob.sha });
         }
 
+        let moveBlobs;
+        if (out.moves?.length) {
+            const snapshot = await ghJson(env, '/git/trees/' + head.tree.sha + '?recursive=1');
+            if (snapshot.truncated) throw new HttpError(409, 'Repository is too large for a safe move');
+            moveBlobs = new Map(snapshot.tree.filter(entry => entry.type === 'blob').map(entry => [entry.path, entry.sha]));
+        }
         for (const m of out.moves || []) {
-            const meta = await ghJson(env, `/contents/${encodePath(m.from)}?ref=${headSha}`);
+            const meta = { sha: moveBlobs.get(m.from) };
+            if (!meta.sha) throw new HttpError(409, 'Photo file is missing from GitHub');
             entries.push({ path: m.from, mode: '100644', type: 'blob', sha: null });
             entries.push({ path: m.to, mode: '100644', type: 'blob', sha: meta.sha });
         }

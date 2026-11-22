@@ -21,6 +21,7 @@ function repoMock({conflict=0,live=null}={}){
   if(p==='/contents/data/photography.json')return response(data);
   if(p.startsWith('/contents/'))return response({sha:'old-image'});
   if(p==='/git/blobs'){const sha='blob'+blobs.size;blobs.set(sha,body);return response({sha},201);}
+  if(p.startsWith('/git/trees/') && !init.method)return response({tree:data.photos.map(photo=>({path:decodeURIComponent(photo.src.slice(1)),type:'blob',sha:'old-image'})),truncated:false});
   if(p==='/git/trees'){const sha='tree'+trees.size;trees.set(sha,body);return response({sha},201);}
   if(p==='/git/commits'){const sha=String(commits.size+1).padStart(40,'0');commits.set(sha,body);return response({sha},201);}
   if(p==='/git/refs/heads/main'){
